@@ -1,4 +1,4 @@
-# ⚡ Bend
+# Bend
 [![npm version](https://img.shields.io/npm/v/bend.svg)](https://www.npmjs.com/package/bend)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE.md)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D24.11.0-green)](https://nodejs.org/)
@@ -23,10 +23,10 @@ bend
 
 ### CLI Prompts
 
-1️⃣ **Language** → JavaScript or TypeScript 
-2️⃣ **Framework** → Express or Fastify  
-3️⃣ **ORM** → Mongoose or Prisma  
-4️⃣ **Project Name** → Used as your folder and package name  
+**Language** → JavaScript or TypeScript  
+**Framework** → Express or Fastify  
+**ORM** → Mongoose or Prisma  
+**Project Name** → Used as your folder and package name  
 
 Once you finish setup, Bend automatically installs dependencies and prepares your backend for development.
 
