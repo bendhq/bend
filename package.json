@@ -1,0 +1,62 @@
+{
+  "name": "bend",
+  "version": "0.0.1",
+  "description": "Fast, modern backend bundler - like Vite for backend.",
+  "type": "module",
+  "bin": {
+    "bend": "bin/bend.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/cli/index.ts --format esm --dts --out-dir dist",
+    "dev": "node --enable-source-maps dist/cli/index.js",
+    "lint": "eslint . --ext .ts,.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bendhq/bend.git"
+  },
+  "keywords": [
+    "backend",
+    "bundler",
+    "node",
+    "javascript",
+    "prisma",
+    "nodejs",
+    "mongoose",
+    "typescript",
+    "express",
+    "fastify",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bendhq/bend/issues"
+  },
+  "homepage": "https://github.com/bendhq/bend#readme",
+  "engines": {
+    "node": ">=24.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "chokidar": "^4.0.3",
+    "commander": "^14.0.2",
+    "ejs": "^3.1.10",
+    "esbuild": "^0.25.12",
+    "picocolors": "^1.1.1"
+  }
+}
