@@ -40,9 +40,10 @@
   },
   "homepage": "https://github.com/bendhq/bend#readme",
   "engines": {
-    "node": ">=24.11.0"
+    "node": ">=18.0.0"
   },
   "devDependencies": {
+    "@types/ejs": "3.1.5",
     "@types/node": "^24.10.0",
     "@typescript-eslint/eslint-plugin": "^8.46.3",
     "@typescript-eslint/parser": "^8.46.3",
