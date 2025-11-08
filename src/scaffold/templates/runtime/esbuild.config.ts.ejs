@@ -1,0 +1,22 @@
+import { build } from 'esbuild';
+import { rmSync } from 'node:fs';
+import path from 'node:path';
+
+const outdir = 'dist';
+
+rmSync(outdir, { recursive: true, force: true });
+
+await build({
+  entryPoints: ['src/server.<%= language %>'],
+  outdir,
+  bundle: true,
+  platform: 'node',
+  target: 'node20',
+  format: 'esm',
+  sourcemap: true,
+  minify: false,
+  logLevel: 'info',
+  tsconfig: path.resolve('tsconfig.json'),
+});
+
+console.log('Build completed successfully.');

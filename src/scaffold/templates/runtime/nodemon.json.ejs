@@ -1,7 +1,9 @@
 {
   "watch": ["src"],
-  "ext": "ts,js,json",
-  "exec": "<%= language === 'ts' ? 'node --loader ts-node/esm src/server.ts' : 'node src/server.js' %>",
-  "signal": "SIGTERM",
-  "quiet": true
+  "ext": "<%= language === 'ts' ? 'ts,json' : 'js,json' %>",
+  "ignore": ["dist", "node_modules"],
+  "exec": "<%= language === 'ts' ? 'ts-node src/server.ts' : 'node src/server.js' %>",
+  "env": {
+    "NODE_ENV": "development"
+  }
 }
