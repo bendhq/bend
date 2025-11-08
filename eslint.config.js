@@ -1,26 +1,28 @@
+// eslint.config.js
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default [
-  { ignores: ["dist/**", "node_modules/**"] },
+  { ignores: ["dist/**", "node_modules/**", "bin/**"] },
 
-  // Base JS rules
   js.configs.recommended,
 
-  // TypeScript (with type-checking)
-  ...tseslint.configs.recommendedTypeChecked,
-
-  {
+  ...tseslint.configs.recommendedTypeChecked.map((cfg) => ({
+    ...cfg,
     files: ["**/*.ts"],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
         project: ["./tsconfig.json"],
-        tsconfigRootDir: import.meta.dirname
+        tsconfigRootDir: process.cwd()
       },
       globals: globals.node
-    },
+    }
+  })),
+
+  {
+    files: ["**/*.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": [
