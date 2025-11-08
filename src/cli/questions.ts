@@ -17,7 +17,7 @@ function isValidPkgName(name: string): boolean {
 }
 
 export async function askSetup(): Promise<Answers> {
-  p.intro(pc.bold(pc.cyan("Bend — backend project generator")));
+  p.intro(pc.bold(pc.cyan("Bend - backend project generator")));
 
   const initialPm = guessPackageManager();
 

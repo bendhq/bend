@@ -1,0 +1,71 @@
+# <%= name %>
+
+Generated with **Bend** - the modern backend project generator and bundler.
+
+---
+
+## 🚀 Getting Started
+
+### Install dependencies
+```bash
+<%= language === 'ts' ? 'npm install' : 'npm install' %>
+```
+
+### Run in development
+```bash
+npm run dev
+```
+
+### Build for production
+```bash
+npm run build
+```
+
+### Start the server
+```bash
+npm start
+```
+
+---
+
+## 🧩 Stack
+
+- Language: <%= language === 'ts' ? 'TypeScript' : 'JavaScript' %>
+- Framework: <%= framework.charAt(0).toUpperCase() + framework.slice(1) %>
+- ORM: <%= orm === 'none' ? 'None' : orm.charAt(0).toUpperCase() + orm.slice(1) %>
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Then update values as needed.
+
+---
+
+## 📂 Project Structure
+
+```
+<%= name %>/
+├─ src/
+│  ├─ server.<%= language %>
+│  ├─ routes/
+│  ├─ middlewares/
+│  └─ db/
+├─ .env.example
+├─ package.json
+├─ tsconfig.json
+└─ README.md
+```
+
+---
+
+## 🧠 About Bend
+
+Bend helps you scaffold backend apps instantly with a preconfigured, production-ready setup.  
+It supports JavaScript or TypeScript, Express or Fastify, and Mongoose or Prisma - all with built-in hot reload and build tooling.
