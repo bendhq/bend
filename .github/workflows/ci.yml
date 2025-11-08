@@ -20,9 +20,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
+          # REMOVE cache: npm  (requires a lockfile)
 
-      - name: Install
+      - name: Install (no lockfile)
         run: npm install --no-audit --fund=false
 
       - name: Lint
@@ -42,7 +42,6 @@ jobs:
           TAR=$(ls -1 *.tgz | head -n1)
           echo "Tarball: $TAR"
           tar -tzf "$TAR"
-          # Basic checks
           tar -tzf "$TAR" | grep -q "^package/package.json$"
           tar -tzf "$TAR" | grep -q "^package/README.md$"
           tar -tzf "$TAR" | grep -q "^package/LICENSE"
