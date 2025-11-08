@@ -1,7 +1,7 @@
 # Bend
 [![npm version](https://img.shields.io/npm/v/bend.svg)](https://www.npmjs.com/package/bend)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE.md)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D24.11.0-green)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-green)](https://nodejs.org/)
 
 **Bend - The modern backend project generator and bundler.**
 
