@@ -6,7 +6,7 @@ import { createProject } from "./actions.js";
 program
   .name("bend")
   .description("Bend - modern backend project generator and bundler.")
-  .version("0.0.1");
+  .version("1.0.0");
 
 program
   .command("new")
