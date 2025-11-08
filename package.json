@@ -1,6 +1,6 @@
 {
   "name": "bend",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Fast, modern backend bundler - like Vite for backend.",
   "type": "module",
   "bin": {
