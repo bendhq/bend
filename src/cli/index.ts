@@ -23,19 +23,22 @@ program
     }
   });
 
-// If no subcommand is passed, run interactive flow directly
-if (process.argv.length <= 2) {
-  (async () => {
-    try {
-      const answers = await askSetup();
-      await createProject(answers);
-      console.log(pc.green("Project created successfully."));
-    } catch (err) {
-      console.error(pc.red("Error creating project."));
-      if (err instanceof Error) console.error(pc.red(err.message));
-      process.exit(1);
-    }
-  })();
-} else {
-  program.parseAsync(process.argv);
+async function runInteractiveFlow() {
+  const answers = await askSetup();
+  await createProject(answers);
+  console.log(pc.green("Project created successfully."));
 }
+
+async function main() {
+  if (process.argv.length <= 2) {
+    await runInteractiveFlow();
+  } else {
+    await program.parseAsync(process.argv);
+  }
+}
+
+main().catch((err) => {
+  console.error(pc.red("Unexpected error."));
+  if (err instanceof Error) console.error(pc.red(err.message));
+  process.exit(1);
+});
