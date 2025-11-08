@@ -46,4 +46,4 @@ jobs:
           tar -tzf "$TAR" | grep -q "^package/README.md$"
           tar -tzf "$TAR" | grep -q "^package/LICENSE"
           tar -tzf "$TAR" | grep -q "^package/bin/bend.js$"
-          tar -tzf "$TAR" | grep -q "^package/dist/cli/index.js$"
+          tar -tzf "$TAR" | grep -q "^package/dist/index.js$"

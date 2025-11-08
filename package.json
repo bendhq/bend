@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "build": "tsup src/cli/index.ts --format esm --dts --out-dir dist",
-    "dev": "node --enable-source-maps dist/cli/index.js",
+    "dev": "node --enable-source-maps dist/index.js",
     "lint": "eslint . --ext .ts,.js"
   },
   "repository": {
