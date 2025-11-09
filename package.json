@@ -1,7 +1,7 @@
 {
-  "name": "bend",
+  "name": "bendjs",
   "version": "1.0.0",
-  "description": "Fast, modern backend bundler - like Vite for backend.",
+  "description": "Fast, modern backend bundler — build backend apps instantly with your favorite stack.",
   "type": "module",
   "bin": {
     "bend": "bin/bend.js"
@@ -25,24 +25,28 @@
   "keywords": [
     "backend",
     "bundler",
-    "node",
-    "javascript",
-    "prisma",
-    "nodejs",
-    "mongoose",
+    "project-generator",
     "typescript",
+    "javascript",
     "express",
     "fastify",
-    "cli"
+    "mongoose",
+    "prisma",
+    "esbuild",
+    "nodemon",
+    "cli",
+    "nodejs",
+    "automation",
+    "developer-tools"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Dhiraj",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bendhq/bend/issues"
   },
   "homepage": "https://github.com/bendhq/bend#readme",
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^20.19.0 || >=22.12.0"
   },
   "devDependencies": {
     "@types/ejs": "3.1.5",
@@ -60,7 +64,6 @@
     "commander": "^14.0.2",
     "ejs": "^3.1.10",
     "esbuild": "^0.25.12",
-    "picocolors": "^1.1.1",
-    "typescript-eslint": "8.46.3"
+    "picocolors": "^1.1.1"
   }
 }

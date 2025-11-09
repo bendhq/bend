@@ -54,7 +54,7 @@ export async function askSetup(): Promise<Answers> {
       name: () =>
         p.text({
           message: "Project name:",
-          placeholder: "Bend App",
+          placeholder: "Bend-App",
           validate: (v) => {
             if (!v || !v.trim()) return "Project name is required.";
             const name = v.trim().toLowerCase();

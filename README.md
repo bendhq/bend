@@ -1,34 +1,59 @@
 # Bend
-[![npm version](https://img.shields.io/npm/v/bend.svg)](https://www.npmjs.com/package/bend)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE.md)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-green)](https://nodejs.org/)
+[![npm version](https://img.shields.io/npm/v/bendjs.svg)](https://www.npmjs.com/package/bendjs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+![Node.js Version](https://img.shields.io/badge/node-%5E20.19.0%20%7C%7C%20%3E%3D22.12.0-green)
 
-**Bend - The modern backend project generator and bundler.**
+**Bend — The modern backend project generator and bundler.**
 
 Bend helps developers quickly create clean, production-ready backend projects.  
-Choose your preferred language, framework, and ORM - Bend scaffolds a complete backend with everything configured and ready to run.
+Choose your preferred language, framework, and ORM — Bend scaffolds a complete backend with everything configured and ready to run.
 
 ---
 
 ## Quick Start
 
-```bash
-# Using npx (recommended)
-npx bend
+### One-liner (recommended)
+Use the creator package:
 
-# Or install globally
-npm install -g bend
+```bash
+# npm
+npm create bend@latest
+
+# pnpm
+pnpm create bend
+
+# yarn
+yarn create bend
+
+# bun
+bun create bend
+# or
+bunx create-bend
+```
+
+### Direct CLI (no shim)
+Run the main CLI package directly:
+
+```bash
+# npx
+npx bendjs
+
+# or install globally
+npm i -g bendjs
 bend
 ```
 
-### CLI Prompts
+---
 
-**Language** → JavaScript or TypeScript  
-**Framework** → Express or Fastify  
-**ORM** → Mongoose or Prisma  
-**Project Name** → Used as your folder and package name  
+## CLI Prompts
 
-Once you finish setup, Bend automatically installs dependencies and prepares your backend for development.
+- **Language** → JavaScript or TypeScript  
+- **Framework** → Express or Fastify  
+- **ORM** → Mongoose or Prisma  
+- **Project Name** → Used as your folder and package name  
+- **Package Manager** → npm / pnpm / yarn / bun (auto-detected with fallback)
+
+After setup, Bend installs dependencies and prepares your backend for development.
 
 ---
 
@@ -58,7 +83,7 @@ cd my-api
 npm run dev
 ```
 
-Your backend will start automatically with **nodemon** hot reloading.
+Your backend starts with **nodemon** hot reloading.
 
 ---
 
@@ -67,20 +92,21 @@ Your backend will start automatically with **nodemon** hot reloading.
 - TypeScript & JavaScript support  
 - Express or Fastify frameworks  
 - Mongoose or Prisma ORM integration  
-- Automatic Nodemon hot-reload setup  
-- Esbuild bundling for lightning-fast builds  
-- Pre-configured scripts for dev, build & start  
+- Automatic **nodemon** hot-reload setup  
+- **esbuild** bundling for fast builds  
+- Preconfigured scripts for dev, build & start  
+- Cross-platform (Windows, macOS, Linux) with smart PM detection + fallback
 
 ---
 
 ## Project Scripts
 
-| Command | Description |
-|----------|--------------|
-| `npm run dev` | Runs the server with **nodemon** for live reload |
-| `npm run build` | Bundles the project using **esbuild** |
-| `npm start` | Runs the compiled app from the `dist` folder |
-| `npm run prisma:generate` | Generates Prisma client (if Prisma selected) |
+| Command                | Description                                   |
+|------------------------|-----------------------------------------------|
+| `npm run dev`          | Run the server with **nodemon** (live reload) |
+| `npm run build`        | Bundle using **esbuild**                      |
+| `npm start`            | Run the compiled app from `dist`              |
+| `npm run prisma:generate` | Generate Prisma client (if Prisma selected) |
 
 ---
 
@@ -99,21 +125,22 @@ bend
 
 ## Contributing
 
-Contributions are always welcome!  
-You can help improve templates, add frameworks, or optimize the CLI.  
-Please open an issue or submit a pull request on [GitHub](https://github.com/bendhq/bend).
+Contributions are welcome!  
+Improve templates, add stacks, or optimize the CLI.  
+Open an issue or PR on [GitHub](https://github.com/bendhq/bend).
 
 ---
 
 ## License
 
-This project is licensed under the [MIT License](./LICENSE.md).  
+This project is licensed under the [MIT License](./LICENSE).  
 © 2025 [BendHQ](https://github.com/bendhq)
 
 ---
 
 ## Links
 
-- **GitHub:** [github.com/bendhq/bend](https://github.com/bendhq/bend)  
-- **npm:** [npmjs.com/package/bend](https://www.npmjs.com/package/bend)  
-- **Issues:** [github.com/bendhq/bend/issues](https://github.com/bendhq/bend/issues)
+- **GitHub:** https://github.com/bendhq/bend  
+- **npm (main CLI):** https://www.npmjs.com/package/bendjs  
+- **npm (one-liner shim):** https://www.npmjs.com/package/create-bend  
+- **Issues:** https://github.com/bendhq/bend/issues
