@@ -9,7 +9,9 @@
   "files": [
     "dist",
     "bin",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "src/scaffold/templates"
   ],
   "scripts": {
     "build": "tsup src/cli/index.ts --format esm --dts --out-dir dist",

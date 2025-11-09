@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import pc from "picocolors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,7 +9,21 @@ import { toValidPackageName } from "../scaffold/normalize.js";
 import type { Answers, TemplateContext } from "../types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TEMPLATES = path.resolve(__dirname, "../scaffold/templates");
+
+function resolveTemplatesRoot(): string {
+  const here = __dirname; // dist/
+  const candidates = [
+    path.resolve(here, "../templates"),
+    path.resolve(here, "../src/scaffold/templates"),
+    path.resolve(here, "../../src/scaffold/templates")
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  throw new Error(`Templates folder not found. Searched:\n${candidates.join("\n")}`);
+}
+
+const TEMPLATES = resolveTemplatesRoot();
 
 export async function createProject(a: Answers) {
   const projectDir = path.resolve(process.cwd(), a.name);
