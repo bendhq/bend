@@ -13,9 +13,14 @@ export function buildDeps(a: Answers): DependencyPlan {
     devDeps.push("prisma");
   }
 
-  if (a.language === "ts") {
-    devDeps.push("typescript", "ts-node");
-    if (a.framework === "express") devDeps.push("@types/express");
+  if (a.language === "typescript") {
+    devDeps.push("typescript", "ts-node", "@types/node");
+
+    if (a.framework === "express") {
+      devDeps.push("@types/express");
+    } else if (a.framework === "fastify") {
+      devDeps.push("@types/fastify");
+    }
   }
 
   return { deps, devDeps };

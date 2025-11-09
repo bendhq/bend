@@ -1,7 +1,7 @@
 {
   "name": "bendjs",
   "version": "1.0.0",
-  "description": "Fast, modern backend bundler — build backend apps instantly with your favorite stack.",
+  "description": "Fast, modern backend bundler - build backend apps instantly with your favorite stack.",
   "type": "module",
   "bin": {
     "bend": "bin/bend.js"

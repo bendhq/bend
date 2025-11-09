@@ -3,25 +3,38 @@ import { promises as fs } from "node:fs";
 import { renderFile } from "./render.js";
 import { ensureDir } from "../utils/fs.js";
 
+const SKIP = new Set([".DS_Store", "Thumbs.db"]);
+
+function destNameFor(srcFile: string): string {
+  let name = path.basename(srcFile);
+  if (name.startsWith("_")) name = "." + name.slice(1); // _gitignore -> .gitignore
+  if (name.endsWith(".ejs")) name = name.slice(0, -4);
+  return name;
+}
+
 export async function writeTemplateFile(
   srcFile: string,
   destDir: string,
   ctx: Record<string, unknown>
 ): Promise<void> {
-  const fileName = path.basename(srcFile);
-  let destName = fileName;
+  const base = destNameFor(srcFile);
+  const destPath = path.join(destDir, base);
 
-  if (destName.startsWith("_")) destName = "." + destName.slice(1); // _gitignore -> .gitignore
-  if (destName.endsWith(".ejs")) destName = destName.slice(0, -4);
-
-  const destPath = path.join(destDir, destName);
   await ensureDir(path.dirname(destPath));
 
-  const content = srcFile.endsWith(".ejs")
-    ? await renderFile(srcFile, ctx)
-    : await fs.readFile(srcFile, "utf8");
-
-  await fs.writeFile(destPath, content);
+  try {
+    if (srcFile.endsWith(".ejs")) {
+      const content = await renderFile(srcFile, ctx);
+      await fs.writeFile(destPath, content, "utf8");
+    } else {
+      const buf = await fs.readFile(srcFile);
+      await fs.writeFile(destPath, buf);
+    }
+  } catch (err) {
+    console.error(`Failed to write: ${destPath} (from ${srcFile})`);
+    if (err instanceof Error) console.error(err.message);
+    throw err;
+  }
 }
 
 export async function writeStaticDir(
@@ -32,11 +45,13 @@ export async function writeStaticDir(
   const entries = await fs.readdir(srcDir, { withFileTypes: true });
 
   for (const entry of entries) {
+    if (SKIP.has(entry.name)) continue;
+
     const srcPath = path.join(srcDir, entry.name);
-    const destPath = path.join(destDir, entry.name);
 
     if (entry.isDirectory()) {
-      await writeStaticDir(srcPath, destPath, ctx);
+      const resolvedDestDir = path.join(destDir, destNameFor(entry.name));
+      await writeStaticDir(srcPath, resolvedDestDir, ctx);
     } else {
       await writeTemplateFile(srcPath, destDir, ctx);
     }

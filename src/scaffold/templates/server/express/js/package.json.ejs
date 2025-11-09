@@ -8,5 +8,19 @@
     "build": "node esbuild.config.ts",
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate"
+  },
+  "dependencies": {
+    "dotenv": "latest",
+    "express": "latest"
+    <% if (orm === 'mongoose') { %>,
+    "mongoose": "latest"
+    <% } else if (orm === 'prisma') { %>,
+    "prisma": "latest",
+    "@prisma/client": "latest"
+    <% } %>
+  },
+  "devDependencies": {
+    "nodemon": "latest",
+    "esbuild": "latest"
   }
 }

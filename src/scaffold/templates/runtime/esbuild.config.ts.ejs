@@ -13,7 +13,6 @@ if (!existsSync("src")) {
 }
 
 try {
-  // Clean old build
   rmSync(outdir, { recursive: true, force: true });
 
   await build({
