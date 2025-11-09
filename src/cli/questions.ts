@@ -27,8 +27,8 @@ export async function askSetup(): Promise<Answers> {
         p.select({
           message: "Choose language:",
           options: [
-            { label: pc.yellow("JavaScript"), value: "js" },
-            { label: pc.cyan("TypeScript (TS)"), value: "ts" }
+            { label: pc.yellow("JavaScript (JS)"), value: "js" },
+            { label: pc.blue("TypeScript (TS)"), value: "ts" }
           ]
         }),
 
@@ -54,7 +54,7 @@ export async function askSetup(): Promise<Answers> {
       name: () =>
         p.text({
           message: "Project name:",
-          placeholder: "my-api",
+          placeholder: "Bend App",
           validate: (v) => {
             if (!v || !v.trim()) return "Project name is required.";
             const name = v.trim().toLowerCase();
