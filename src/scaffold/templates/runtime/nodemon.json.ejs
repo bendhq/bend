@@ -1,9 +1,10 @@
 {
   "watch": ["src"],
-  "ext": "<%= language === 'ts' ? 'ts,json' : 'js,json' %>",
+  "ext": "<%= language === 'typescript' ? 'ts,json' : 'js,json' %>",
   "ignore": ["dist", "node_modules"],
-  "exec": "<%= language === 'ts' ? 'ts-node src/server.ts' : 'node src/server.js' %>",
+  "exec": "<% if (language === 'typescript') { %>ts-node --transpile-only src/server.ts<% } else { %>node src/server.js<% } %>",
   "env": {
     "NODE_ENV": "development"
-  }
+  },
+  "delay": "200"
 }

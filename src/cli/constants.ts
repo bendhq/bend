@@ -1,5 +1,5 @@
 export const CONFIG = {
-  minNodeVersion: ">=18.0.0",
+  minNodeVersion: "^20.19.0 || >=22.12.0",
   templatesDir: "src/scaffold/templates"
 } as const;
 
