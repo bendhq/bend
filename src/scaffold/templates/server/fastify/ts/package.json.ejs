@@ -11,18 +11,14 @@
   },
   "dependencies": {
     "dotenv": "latest",
-    "fastify": "latest"
-    <% if (orm === 'mongoose') { %>,
-    "mongoose": "latest"
-    <% } else if (orm === 'prisma') { %>,
+    "fastify": "latest"<% if (orm === 'mongoose') { %>,
+    "mongoose": "latest"<% } else if (orm === 'prisma') { %>,
     "prisma": "latest",
-    "@prisma/client": "latest"
-    <% } %>
+    "@prisma/client": "latest"<% } %>
   },
   "devDependencies": {
     "typescript": "latest",
     "@types/node": "latest",
-    "@types/fastify": "latest",
     "ts-node": "latest",
     "nodemon": "latest",
     "esbuild": "latest"
