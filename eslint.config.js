@@ -1,43 +1,32 @@
-import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import parserTs from "@typescript-eslint/parser";
+import pluginTs from "@typescript-eslint/eslint-plugin";
+import prettier from "eslint-config-prettier";
 
 export default [
-  { ignores: ["dist/**", "node_modules/**", "bin/**"] },
-
-  js.configs.recommended,
-
-  ...tseslint.configs.recommendedTypeChecked.map((cfg) => ({
-    ...cfg,
-    files: ["**/*.ts"],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: ["./tsconfig.json"],
-        tsconfigRootDir: process.cwd()
-      },
-      globals: globals.node
-    }
-  })),
-
   {
-    files: ["**/*.ts"],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }
-      ]
-    }
+    ignores: ["dist/**", "node_modules/**", "src/scaffold/templates/**"]
   },
-
   {
-    files: ["**/*.js"],
+    files: ["**/*.ts", "**/*.js"],
     languageOptions: {
-      globals: globals.node
+      ecmaVersion: "latest",
+      sourceType: "module",
+      parser: parserTs, 
+      parserOptions: {
+        ecmaVersion: "latest"
+      }
+    },
+    plugins: {
+      "@typescript-eslint": pluginTs
     },
     rules: {
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }]
+      // sensible, non-type-aware rules
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/consistent-type-imports": "warn",
+      "no-console": "off"
     }
-  }
+  },
+  prettier
 ];
