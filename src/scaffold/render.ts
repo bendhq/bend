@@ -6,12 +6,6 @@ export function renderString(template: string, ctx: Record<string, unknown>): st
 }
 
 export async function renderFile(filePath: string, ctx: Record<string, unknown>): Promise<string> {
-  try {
-    const template = await fs.readFile(filePath, "utf8");
-    return renderString(template, ctx);
-  } catch (err) {
-    console.error(`Failed to render template: ${filePath}`);
-    if (err instanceof Error) console.error(err.message);
-    throw err;
-  }
+  const template = await fs.readFile(filePath, "utf8");
+  return renderString(template, ctx);
 }

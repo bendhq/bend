@@ -1,89 +1,81 @@
 import * as p from "@clack/prompts";
 import pc from "picocolors";
-import type { Answers, PackageManager } from "../types.js";
+import type { Answers, Framework, Language, Orm, PackageManager } from "../types.js";
+import { detectPackageManagerHint } from "../utils/pm.js";
 
-function guessPackageManager(): PackageManager {
-  const ua = process.env.npm_config_user_agent || "";
-  if (ua.includes("pnpm")) return "pnpm";
-  if (ua.includes("yarn")) return "yarn";
-  if (ua.includes("bun")) return "bun";
-  return "npm";
-}
-
-function isValidPkgName(name: string): boolean {
-  // basic npm package-name validation (unscoped)
-  // lowercase letters, digits, . _ - allowed; must not start/end with -
-  return /^[a-z0-9._-]+$/.test(name) && !name.startsWith("-") && !name.endsWith("-");
+function ensure<T>(val: unknown, _msg: string): T {
+  if (p.isCancel(val)) {
+    p.cancel("Operation cancelled.");
+    process.exit(1);
+  }
+  return val as T;
 }
 
 export async function askSetup(): Promise<Answers> {
-  p.intro(pc.bold(pc.cyan("Bend - backend project generator")));
+  p.intro(pc.cyan("Bend - backend project generator"));
 
-  const initialPm = guessPackageManager();
-
-  const answers = await p.group(
-    {
-      language: () =>
-        p.select({
-          message: "Choose language:",
-          options: [
-            { label: pc.yellow("JavaScript (JS)"), value: "js" },
-            { label: pc.blue("TypeScript (TS)"), value: "ts" }
-          ]
-        }),
-
-      framework: () =>
-        p.select({
-          message: "Choose framework:",
-          options: [
-            { label: "Express", value: "express" },
-            { label: "Fastify", value: "fastify" }
-          ]
-        }),
-
-      orm: () =>
-        p.select({
-          message: "Choose ORM:",
-          options: [
-            { label: "Mongoose", value: "mongoose" },
-            { label: "Prisma", value: "prisma" },
-            { label: "None", value: "none" }
-          ]
-        }),
-
-      name: () =>
-        p.text({
-          message: "Project name:",
-          placeholder: "Bend-App",
-          validate: (v) => {
-            if (!v || !v.trim()) return "Project name is required.";
-            const name = v.trim().toLowerCase();
-            if (!isValidPkgName(name)) {
-              return 'Use lowercase letters, digits, ".", "_" or "-". Cannot start/end with "-".';
-            }
-            return undefined;
-          }
-        }),
-
-      pkgm: () =>
-        p.select({
-          message: "Package manager:",
-          initialValue: initialPm,
-          options: [
-            { label: "npm", value: "npm" },
-            { label: "pnpm", value: "pnpm" },
-            { label: "yarn", value: "yarn" },
-            { label: "bun", value: "bun" }
-          ]
-        })
-    },
-    {
-      onCancel: () => {
-        p.cancel("Aborted.");
-        process.exit(0);
-      }
-    }
+  const language = ensure<Language>(
+    await p.select({
+      message: "Choose language:",
+      options: [
+        { label: pc.blue("TypeScript (TS)"), value: "typescript" },
+        { label: pc.yellow("JavaScript (JS)"), value: "javascript" }
+      ]
+    }),
+    "Language is required"
   );
 
-  return answers as Answers;
+  const framework = ensure<Framework>(
+    await p.select({
+      message: "Choose framework:",
+      options: [
+        { label: "Express", value: "express" },
+        { label: "Fastify", value: "fastify" }
+      ]
+    }),
+    "Framework is required"
+  );
+
+  const orm = ensure<Orm>(
+    await p.select({
+      message: "Choose ORM:",
+      options: [
+        { label: "Mongoose", value: "mongoose" },
+        { label: "Prisma", value: "prisma" },
+        { label: "None", value: "none" }
+      ]
+    }),
+    "ORM is required"
+  );
+
+  const name = ensure<string>(
+    await p.text({
+      message: "Project name:",
+      placeholder: "Bend-App",
+      validate(v) {
+        if (!v || !v.trim()) return "Project name is required";
+        if (v.length > 214) return "Project name is too long";
+      }
+    }),
+    "Project name is required"
+  );
+
+  const hinted = detectPackageManagerHint();
+
+  const pkgm = ensure<PackageManager>(
+    await p.select({
+      message: "Package manager:",
+      initialValue: hinted,
+      options: [
+        { label: "npm", value: "npm" },
+        { label: "pnpm", value: "pnpm" },
+        { label: "yarn", value: "yarn" },
+        { label: "bun", value: "bun" }
+      ]
+    }),
+    "Package manager is required"
+  );
+
+  p.outro(pc.green("Configuration captured."));
+  return { language, framework, orm, name, pkgm };
 }

@@ -5,8 +5,6 @@ export function toValidPackageName(name: string): string {
     .replace(/[^a-z0-9._-]+/g, "-")
     .replace(/^-+/, "")
     .replace(/-+$/, "");
-
   const sanitized = cleaned.replace(/^[_.]+/, "");
-
   return sanitized || "bend-app";
 }
