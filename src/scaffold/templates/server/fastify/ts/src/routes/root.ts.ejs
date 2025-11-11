@@ -1,0 +1,14 @@
+import type { FastifyInstance, FastifyPluginCallback } from "fastify";
+
+const root: FastifyPluginCallback = (app: FastifyInstance, _opts, done) => {
+  app.get("/", async () => {
+    return {
+      name: "<%= name %>",
+      about: "Bend - modern backend project generator and bundler.",
+      more: "https://bendhq.org"
+    };
+  });
+  done();
+};
+
+export default root;

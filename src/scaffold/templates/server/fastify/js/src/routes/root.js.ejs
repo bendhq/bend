@@ -1,0 +1,9 @@
+/** @param {import('fastify').FastifyInstance} app */
+export default function root(app, _opts, done) {
+  app.get("/", async () => ({
+    name: "<%= name %>",
+    about: "Bend - modern backend project generator and bundler.",
+    more: "https://bendhq.org"
+  }));
+  done();
+}

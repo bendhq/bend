@@ -1,18 +1,17 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import { errorHandler } from './middlewares/error.js';
-import healthRoute from './routes/health.js';
-
-dotenv.config();
+import "dotenv/config";
+import express from "express";
+import healthRouter from "./routes/health.js";
+import rootRouter from "./routes/root.js";
+import { errorHandler } from "./middlewares/error.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use('/api', healthRoute);
-
+app.use("/", rootRouter);
+app.use("/health", healthRouter);
 app.use(errorHandler);
 
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`[server] Running on http://localhost:${port}`);
+  console.log(`Server listening on http://localhost:${port}`);
 });
