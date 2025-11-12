@@ -9,10 +9,10 @@
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate"
   },
-
   "dependencies": {
     "dotenv": "latest",
-    "express": "latest"
+    "express": "latest",
+    "cors": "latest",
     <% if (orm === 'mongoose') { %>,
     "mongoose": "latest"
     <% } else if (orm === 'prisma') { %>,
@@ -20,7 +20,6 @@
     "@prisma/client": "latest"
     <% } %>
   },
-
   "devDependencies": {
     "nodemon": "latest",
     "esbuild": "latest"

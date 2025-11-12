@@ -1,12 +1,28 @@
-import { Router } from 'express';
+import { Router } from "express";
+import os from "os";
 
 const router = Router();
 
-router.get('/health', (req, res) => {
-  res.json({
+router.get("/health", (req, res) => {
+  const uptime = process.uptime();
+  const memoryUsage = process.memoryUsage();
+  const loadAvg = os.loadavg();
+
+  res.status(200).json({
     success: true,
-    status: 'ok',
-    timestamp: new Date().toISOString()
+    status: "ok",
+    timestamp: new Date().toString(),
+    uptime: `${Math.round(uptime)}s`,
+    environment: process.env.NODE_ENV || "development",
+    system: {
+      hostname: os.hostname(),
+      platform: os.platform(),
+      load: loadAvg.map((n) => n.toFixed(2)),
+      memory: {
+        rss: `${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`,
+        heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`
+      }
+    }
   });
 });
 

@@ -1,17 +1,174 @@
 import "dotenv/config";
+import fs from "fs";
+import http from "http";
+import https from "https";
 import express from "express";
-import healthRouter from "./routes/health.js";
+import cors from "cors";
+import os from "os";
+import mongoose from "mongoose";
 import rootRouter from "./routes/root.js";
+import healthRouter from "./routes/health.js";
 import { errorHandler } from "./middlewares/error.js";
+import { connectDB } from "./db/mongoose.js";
 
 const app = express();
 
+// Trust proxy (useful when behind proxies/load balancers)
+app.set("trust proxy", true);
+
+// Basic middlewares
 app.use(express.json());
+
+// cors configurations
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN?.split(",") || "http://locahost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+// Mount routers
+app.use("/", healthRouter);
 app.use("/", rootRouter);
-app.use("/health", healthRouter);
+
+// Readiness probe - checks DB connection quickly
+app.get("/health/ready", (_req, res) => {
+  // mongoose.connection.readyState values:
+  // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+  const state = mongoose.connection.readyState;
+  const ready = state === 1;
+  res.status(ready ? 200 : 503).json({
+    ready,
+    mongooseState: state,
+    timestamp: new Date().toString(),
+    host: os.hostname()
+  });
+});
+
+// Error handler (must be after routes)
 app.use(errorHandler);
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
+// Env & SSL config
+const HOST = process.env.HOST || "0.0.0.0";
+const HTTP_PORT = Number(process.env.PORT || 3000);
+const HTTPS_PORT = Number(process.env.HTTPS_PORT || process.env.SSL_PORT || 3443);
+
+const SSL_KEY_PATH = process.env.SSL_KEY_PATH || "";
+const SSL_CERT_PATH = process.env.SSL_CERT_PATH || "";
+const SSL_PFX_PATH = process.env.SSL_PFX_PATH || "";
+const SSL_PASSPHRASE = process.env.SSL_PASSPHRASE || "";
+
+const REDIRECT_TO_HTTPS = (process.env.REDIRECT_TO_HTTPS ?? "true") === "true";
+const HSTS_MAX_AGE = Number(process.env.HSTS_MAX_AGE || 31536000); // 1 year
+
+// Connect to DB first
+await connectDB();
+
+// Helper: create HTTP server that optionally redirects to HTTPS
+const createHttpServer = (redirectToHttps = false, httpsPort = HTTPS_PORT) => {
+  return http.createServer((req, res) => {
+    if (redirectToHttps) {
+      const hostHeader = req.headers.host || HOST;
+      const hostOnly = hostHeader.split(":")[0];
+      const targetHost = `${hostOnly}:${httpsPort}`;
+      const target = `https://${targetHost}${req.url}`;
+      res.writeHead(301, { Location: target });
+      return res.end();
+    }
+    app(req, res);
+  });
+};
+
+// Try to load SSL credentials if provided
+let credentials = null;
+try {
+  if (SSL_PFX_PATH) {
+    const pfx = fs.readFileSync(SSL_PFX_PATH);
+    credentials = { pfx, passphrase: SSL_PASSPHRASE || undefined };
+  } else if (SSL_KEY_PATH && SSL_CERT_PATH) {
+    const key = fs.readFileSync(SSL_KEY_PATH);
+    const cert = fs.readFileSync(SSL_CERT_PATH);
+    credentials = { key, cert, passphrase: SSL_PASSPHRASE || undefined };
+  }
+} catch (err) {
+  console.error("[server] Failed to read SSL files:", err);
+  if (SSL_KEY_PATH || SSL_CERT_PATH || SSL_PFX_PATH) process.exit(1);
+}
+
+const mode = process.env.NODE_ENV || "development";
+
+let httpServer;
+let httpsServer;
+
+if (credentials) {
+  // When HTTPS is enabled, add HSTS header for secure responses
+  app.use((_req, res, next) => {
+    res.setHeader(
+      "Strict-Transport-Security",
+      `max-age=${HSTS_MAX_AGE}; includeSubDomains; preload`
+    );
+    next();
+  });
+
+  httpsServer = https.createServer(credentials, app);
+  httpServer = createHttpServer(REDIRECT_TO_HTTPS, HTTPS_PORT);
+
+  httpsServer.listen(HTTPS_PORT, HOST, () => {
+    console.log("\n====================================");
+    console.log(`Server running in ${mode} mode`);
+    console.log(`HTTPS: https://${HOST === "0.0.0.0" ? "localhost" : HOST}:${HTTPS_PORT}`);
+    if (REDIRECT_TO_HTTPS) {
+      console.log(
+        `HTTP -> HTTPS redirect enabled on http://${
+          HOST === "0.0.0.0" ? "localhost" : HOST
+        }:${HTTP_PORT}`
+      );
+    } else {
+      console.log(`HTTP: http://${HOST === "0.0.0.0" ? "localhost" : HOST}:${HTTP_PORT}`);
+    }
+    console.log("====================================\n");
+  });
+
+  httpServer.listen(HTTP_PORT, HOST);
+} else {
+  // No TLS - run plain HTTP
+  httpServer = http.createServer(app);
+  httpServer.listen(HTTP_PORT, HOST, () => {
+    console.log("\n====================================");
+    console.log(`Server running in ${mode} mode`);
+    console.log(`HTTP: http://${HOST === "0.0.0.0" ? "localhost" : HOST}:${HTTP_PORT}`);
+    console.log("====================================\n");
+  });
+}
+
+// Graceful shutdown
+const shutdown = async (signal) => {
+  console.log(`[server] Received ${signal}. Shutting down...`);
+  try {
+    if (httpServer && typeof httpServer.close === "function") {
+      await new Promise((res) => httpServer.close(res));
+    }
+    if (httpsServer && typeof httpsServer.close === "function") {
+      await new Promise((res) => httpsServer.close(res));
+    }
+    await mongoose.disconnect();
+    console.log("[server] Shutdown complete.");
+    process.exit(0);
+  } catch (err) {
+    console.error("[server] Error during shutdown:", err);
+    process.exit(1);
+  }
+};
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("uncaughtException", (err) => {
+  console.error("[server] Uncaught exception:", err);
+  shutdown("uncaughtException");
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[server] Unhandled rejection:", reason);
+  shutdown("unhandledRejection");
 });
