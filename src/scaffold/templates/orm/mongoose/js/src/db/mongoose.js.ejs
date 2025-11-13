@@ -1,16 +1,13 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const url = process.env.DATABASE_URL || "mongodb://127.0.0.1:27017/bend-app";
+const url = process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/app';
 
-export const connectDB = async () => {
-  try {
-    mongoose.set("strictQuery", true);
-    await mongoose.connect(url);
-    console.log("[database] MongoDB connected");
-  } catch (error) {
-    console.error("[database] MongoDB connection error:", error);
-    process.exit(1);
-  }
-};
+try {
+  await mongoose.connect(url);
+  console.log('[database] MongoDB connected');
+} catch (error) {
+  console.error('[database] MongoDB connection error:', error);
+  process.exit(1);
+}
 
 export default mongoose;
