@@ -20,7 +20,6 @@ export default [
       "@typescript-eslint": pluginTs
     },
     rules: {
-      // sensible, non-type-aware rules
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-explicit-any": "off",

@@ -1,0 +1,31 @@
+import logger from '../utils/logger.js';
+
+export function errorHandler(err, req, res, next) {
+  // express-async-errors will forward thrown errors here
+  const status = err.statusCode || err.status || 500;
+  const safeMessage = err.message || 'Internal Server Error';
+
+  // log full error for server-side monitoring
+  logger.error('Request error', {
+    status,
+    message: err.message,
+    stack: err.stack,
+    path: req.originalUrl,
+    method: req.method,
+    requestId: req.id
+  });
+
+  const payload = {
+    status: 'error',
+    statusCode: status,
+    message: safeMessage,
+    requestId: req.id
+  };
+
+  if (process.env.NODE_ENV === 'development') {
+    payload.stack = err.stack;
+    payload.extras = err.extras || undefined;
+  }
+
+  res.status(status).json(payload);
+}
