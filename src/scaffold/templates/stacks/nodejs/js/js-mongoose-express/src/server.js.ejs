@@ -1,0 +1,59 @@
+import 'express-async-errors';
+import dotenv from 'dotenv';
+dotenv.config();
+
+import http from 'http';
+import app from './app.js';
+import logger from './utils/logger.js';
+import config from './config/index.js';
+import { connectDB, disconnectDB } from './config/db.js';
+
+const PORT = config.port;
+
+async function start() {
+  try {
+    await connectDB();
+    const server = http.createServer(app);
+
+    server.listen(PORT, () => {
+      logger.info(`Server listening on port ${PORT}`);
+    });
+
+    const graceful = async (signal) => {
+      try {
+        logger.warn(`Received ${signal} — closing server`);
+        server.close(async (err) => {
+          if (err) {
+            logger.error('Server close error', err);
+            process.exit(1);
+          }
+          await disconnectDB();
+          logger.info('Shutdown complete');
+          process.exit(0);
+        });
+      } catch (err) {
+        logger.error('Graceful shutdown failed', err);
+        process.exit(1);
+      }
+    };
+
+    process.on('SIGINT', () => graceful('SIGINT'));
+    process.on('SIGTERM', () => graceful('SIGTERM'));
+
+    process.on('uncaughtException', (err) => {
+      logger.error('Uncaught Exception', { message: err.message, stack: err.stack });
+      process.exit(1);
+    });
+
+    process.on('unhandledRejection', (reason) => {
+      logger.error('Unhandled Rejection', { reason });
+      process.exit(1);
+    });
+
+  } catch (err) {
+    logger.error('Failed to start app', err);
+    process.exit(1);
+  }
+}
+
+start();

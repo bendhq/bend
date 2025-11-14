@@ -1,23 +1,53 @@
 import pc from "picocolors";
 
-export function createSpinner(text: string) {
-  let interval: NodeJS.Timeout | null = null;
-  const frames = ["-", "\\", "|", "/"];
-  let i = 0;
+const FRAMES = ["-", "\\", "|", "/"];
 
-  function start() {
-    process.stdout.write(pc.cyan(text));
-    interval = setInterval(() => {
-      process.stdout.write(`\r${pc.cyan(text)} ${frames[(i = ++i % frames.length)]}`);
+export class Spinner {
+  private i = 0;
+  private id: ReturnType<typeof setInterval> | null = null;
+  private text = "";
+
+  start(text = "") {
+    this.text = text;
+    if (this.id) return;
+    this.id = setInterval(() => {
+      const frame = FRAMES[(this.i = (this.i + 1) % FRAMES.length)];
+      this.write(`${pc.cyan(frame)} ${this.text}`);
     }, 80);
   }
 
-  function stop(success = true, message?: string) {
-    if (interval) clearInterval(interval);
-    process.stdout.write("\r");
-    const prefix = success ? pc.green("✔") : pc.red("✖");
-    console.log(`${prefix} ${pc.bold(message || text)}`);
+  setText(text: string) {
+    this.text = text;
   }
 
-  return { start, stop };
+  stop() {
+    if (this.id) {
+      clearInterval(this.id);
+      this.id = null;
+      this.clearLine();
+    }
+  }
+
+  succeed(text?: string) {
+    this.stop();
+    if (text) this.text = text;
+    process.stdout.write(`${pc.green("ok")} ${this.text}\n`);
+  }
+
+  fail(text?: string) {
+    this.stop();
+    if (text) this.text = text;
+    process.stdout.write(`${pc.red("x")} ${this.text}\n`);
+  }
+
+  private write(s: string) {
+    this.clearLine();
+    process.stdout.write(s);
+  }
+
+  private clearLine() {
+    process.stdout.write("\r\x1b[K");
+  }
 }
+
+export const spinner = new Spinner();

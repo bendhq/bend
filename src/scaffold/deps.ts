@@ -1,22 +1,24 @@
-import { VERSIONS } from "../cli/constants.js";
 import type { Answers, DependencyPlan } from "../types.js";
 
 export function buildDeps(a: Answers): DependencyPlan {
-  const deps: string[] = ["dotenv@" + VERSIONS.dotenv];
-  const devDeps: string[] = ["esbuild@" + VERSIONS.esbuild, "nodemon@" + VERSIONS.nodemon];
+  const deps: string[] = ["dotenv"];
+  const devDeps: string[] = ["esbuild", "nodemon"];
 
-  if (a.framework === "express") deps.push("express@" + VERSIONS.express);
-  if (a.framework === "fastify") deps.push("fastify@" + VERSIONS.fastify);
+  // frameworks
+  if (a.framework === "express") deps.push("express");
+  else if (a.framework === "fastify") deps.push("fastify");
 
-  if (a.orm === "mongoose") deps.push("mongoose@" + VERSIONS.mongoose);
-  if (a.orm === "prisma") {
-    deps.push("@prisma/client@" + VERSIONS.prismaClient);
-    devDeps.push("prisma@" + VERSIONS.prisma);
+  // orm
+  if (a.orm === "mongoose") deps.push("mongoose");
+  else if (a.orm === "prisma") {
+    deps.push("@prisma/client");
+    devDeps.push("prisma");
   }
 
-  if (a.language === "ts") {
-    devDeps.push("typescript@" + VERSIONS.typescript, "ts-node@" + VERSIONS.tsNode);
-    if (a.framework === "express") devDeps.push("@types/express@" + VERSIONS["@types/express"]);
+  // typescript toolchain
+  if (a.language === "typescript") {
+    devDeps.push("typescript", "ts-node", "@types/node");
+    if (a.framework === "express") devDeps.push("@types/express");
   }
 
   return { deps, devDeps };

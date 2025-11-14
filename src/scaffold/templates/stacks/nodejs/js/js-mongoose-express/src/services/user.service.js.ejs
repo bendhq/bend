@@ -1,0 +1,14 @@
+import User from '../models/user.model.js';
+
+export async function createUser(data) {
+  const user = new User(data);
+  return user.save();
+}
+
+export async function listUsers({ limit = 50, skip = 0 } = {}) {
+  return User.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean().exec();
+}
+
+export async function getUserById(id) {
+  return User.findById(id).lean().exec();
+}

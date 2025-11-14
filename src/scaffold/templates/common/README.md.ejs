@@ -6,54 +6,45 @@ Generated with **Bend** - the modern backend project generator and bundler.
 
 ## 🚀 Getting Started
 
-### Install dependencies
-```bash
-<%= language === 'ts' ? 'npm install' : 'npm install' %>
-```
+### 1. Install dependencies
+<%= pkgm %> install
 
-### Run in development
-```bash
-npm run dev
-```
+### 2. Start development server
+<%= pkgm %> run dev
 
-### Build for production
-```bash
-npm run build
-```
+### 3. Build for production
+<%= pkgm %> run build
 
-### Start the server
-```bash
-npm start
-```
+### 4. Run the compiled app
+<%= pkgm %> start
 
 ---
 
 ## 🧩 Stack
 
-- Language: <%= language === 'ts' ? 'TypeScript' : 'JavaScript' %>
-- Framework: <%= framework.charAt(0).toUpperCase() + framework.slice(1) %>
-- ORM: <%= orm === 'none' ? 'None' : orm.charAt(0).toUpperCase() + orm.slice(1) %>
+| Option | Selection |
+|---------|------------|
+| **Language** | <%= language === 'typescript' ? 'TypeScript' : 'JavaScript' %> |
+| **Framework** | <%= framework.charAt(0).toUpperCase() + framework.slice(1) %> |
+| **ORM** | <%= orm.charAt(0).toUpperCase() + orm.slice(1) %> |
 
 ---
 
 ## ⚙️ Environment Variables
 
-Create a `.env` file based on `.env.example`:
+Create a `.env` file based on the example provided:
 
-```bash
 cp .env.example .env
-```
 
-Then update values as needed.
+Then update the variables as needed.
 
 ---
 
 ## 📂 Project Structure
 
-```
 <%= name %>/
 ├─ src/
-│  ├─ server.<%= language %>
+│  ├─ server.<%= language === 'typescript' ? 'ts' : 'js' %>
 │  ├─ routes/
 │  ├─ middlewares/
 │  └─ db/
@@ -61,11 +52,12 @@ Then update values as needed.
 ├─ package.json
 ├─ tsconfig.json
 └─ README.md
-```
 
 ---
 
 ## 🧠 About Bend
 
 Bend helps you scaffold backend apps instantly with a preconfigured, production-ready setup.  
-It supports JavaScript or TypeScript, Express or Fastify, and Mongoose or Prisma - all with built-in hot reload and build tooling.
+It supports **JavaScript or TypeScript**, **Express or Fastify**, and **Mongoose or Prisma** — all with built-in **hot reload**, **esbuild bundling**, and smart defaults.
+
+For more info, visit https://github.com/bendhq/bend

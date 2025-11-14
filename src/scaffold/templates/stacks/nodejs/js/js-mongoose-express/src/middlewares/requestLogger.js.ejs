@@ -1,0 +1,19 @@
+import morgan from 'morgan';
+import logger from '../utils/logger.js';
+
+const stream = {
+  write: (message) => {
+    // morgan outputs
+    logger.info(message.trim());
+  }
+};
+
+const skip = (req, res) => {
+  // skip health checks from logs if you want
+  return req.path === '/health';
+};
+
+export default morgan(
+  ':remote-addr :method :url :status :res[content-length] - :response-time ms :remote-user',
+  { stream, skip }
+);

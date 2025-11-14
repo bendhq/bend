@@ -1,4 +1,4 @@
-export type Language = "js" | "ts";
+export type Language = "javascript" | "typescript";
 export type Framework = "express" | "fastify";
 export type Orm = "mongoose" | "prisma" | "none";
 export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
@@ -16,6 +16,7 @@ export interface TemplateContext extends Record<string, unknown> {
   language: Language;
   framework: Framework;
   orm: Orm;
+  pkgm: PackageManager;
 }
 
 export interface DependencyPlan {

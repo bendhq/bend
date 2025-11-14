@@ -1,0 +1,63 @@
+import js from "@eslint/js";
+import globals from "globals";
+import pluginImport from "eslint-plugin-import";
+import pluginPromise from "eslint-plugin-promise";
+import pluginN from "eslint-plugin-n";
+
+export default [
+  {
+    ignores: [
+      "node_modules/**",
+      "dist/**",
+      "logs/**",
+      ".prettierrc",
+      ".prettierrc.*",
+      "prettier.config.*"
+    ]
+  },
+
+  js.configs.recommended,
+
+  {
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+        ...globals.es2024
+      }
+    },
+
+    plugins: {
+      import: pluginImport,
+      promise: pluginPromise,
+      n: pluginN
+    },
+
+    rules: {
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "no-console": "off",
+      eqeqeq: "error",
+      "prefer-const": "error",
+      "no-var": "error",
+
+      "n/no-missing-import": "off",
+      "n/no-unsupported-features/es-syntax": "off",
+      "n/no-extraneous-import": "error",
+
+      "import/no-unresolved": "error",
+      "import/order": [
+        "warn",
+        {
+          groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
+          "newlines-between": "always"
+        }
+      ],
+
+      "promise/no-new-statics": "error",
+      "promise/no-nesting": "warn",
+      "promise/no-return-wrap": "warn",
+      "promise/always-return": "off"
+    }
+  }
+];

@@ -1,22 +1,35 @@
-import { build } from 'esbuild';
-import { rmSync } from 'node:fs';
-import path from 'node:path';
+import { build } from "esbuild";
+import { rmSync, existsSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const outdir = 'dist';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const outdir = "dist";
+const srcFile = path.resolve("src/server.<%= language === 'typescript' ? 'ts' : 'js' %>");
 
-rmSync(outdir, { recursive: true, force: true });
+if (!existsSync("src")) {
+  console.error("Source folder not found. Make sure 'src/' exists before building.");
+  process.exit(1);
+}
 
-await build({
-  entryPoints: ['src/server.<%= language %>'],
-  outdir,
-  bundle: true,
-  platform: 'node',
-  target: 'node18',
-  format: 'esm',
-  sourcemap: true,
-  minify: false,
-  logLevel: 'info',
-  tsconfig: path.resolve('tsconfig.json'),
-});
+try {
+  rmSync(outdir, { recursive: true, force: true });
 
-console.log('Build completed successfully.');
+  await build({
+    entryPoints: [srcFile],
+    outdir,
+    bundle: true,
+    platform: "node",
+    target: ["node20"],
+    format: "esm",
+    sourcemap: true,
+    minify: false,
+    logLevel: "info",
+    tsconfig: path.resolve("tsconfig.json"),
+  });
+
+  console.log("Build completed successfully.");
+} catch (error) {
+  console.error("Build failed:", error);
+  process.exit(1);
+}
