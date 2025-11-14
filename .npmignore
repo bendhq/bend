@@ -26,10 +26,10 @@ tsup.config.*
 .idea/
 .editorconfig
 
-# Environment files
-.env
-.env.*
-.env.example
+# Environment files (needed for templates)
+# .env
+# .env.*
+# .env.example
 
 # Logs
 npm-debug.log*
