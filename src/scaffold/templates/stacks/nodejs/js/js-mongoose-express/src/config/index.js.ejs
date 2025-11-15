@@ -7,16 +7,16 @@ const envSchema = Joi.object({
   PORT: Joi.number().default(4000),
   NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
   MONGO_URI: Joi.string().uri().required(),
-  APP_NAME: Joi.string().default('myapp'),
+  APP_NAME: Joi.string().default('Bend-App'),
   TRUST_PROXY: Joi.boolean().truthy('true').falsy('false').default(false),
   RATE_LIMIT_WINDOW_MS: Joi.number().default(60000),
   RATE_LIMIT_MAX: Joi.number().default(100),
-  LOG_LEVEL: Joi.string().default('info')
+  LOG_LEVEL: Joi.string().default('info'),
+  CORS_ORIGIN: Joi.string().default('*')
 }).unknown();
 
 const { value: env, error } = envSchema.validate(process.env);
 if (error) {
-  // prefer throwing early in startup so process manager can restart or fail
   throw new Error(`Config validation error: ${error.message}`);
 }
 
@@ -28,5 +28,6 @@ export default {
   trustProxy: env.TRUST_PROXY,
   rateLimitWindowMs: env.RATE_LIMIT_WINDOW_MS,
   rateLimitMax: env.RATE_LIMIT_MAX,
-  logLevel: env.LOG_LEVEL
+  logLevel: env.LOG_LEVEL,
+  corsOrigin: env.CORS_ORIGIN
 };
