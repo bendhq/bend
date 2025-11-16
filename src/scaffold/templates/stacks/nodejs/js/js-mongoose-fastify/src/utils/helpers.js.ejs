@@ -1,0 +1,17 @@
+import createError from 'http-errors';
+
+export function validateWithJoi(schema, source = 'body') {
+  return async (request, reply) => {
+    const data = request[source];
+    const { error, value } = schema.validate(data, { abortEarly: false, stripUnknown: true });
+    if (error) {
+      reply.status(400).send({
+        status: 'fail',
+        message: 'Validation error',
+        details: error.details.map((d) => ({ message: d.message, path: d.path }))
+      });
+      throw createError(400, 'Validation error');
+    }
+    request[source] = value;
+  };
+}

@@ -1,0 +1,29 @@
+{
+  "name": "<%= name %>",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --watch src --exec \"node src/server.js\"",
+    "start": "node src/server.js",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@fastify/helmet": "^10.0.0",
+    "@fastify/compress": "^6.0.0",
+    "@fastify/rate-limit": "^7.0.0",
+    "@fastify/cors": "^8.0.0",
+    "fastify": "^4.23.0",
+    "fastify-plugin": "^4.6.0",
+    "mongoose": "^7.5.0",
+    "joi": "^17.9.2",
+    "dotenv": "^16.3.1",
+    "prom-client": "^14.0.1",
+    "uuid": "^9.0.0",
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "eslint": "^8.58.0"
+  }
+}

@@ -1,0 +1,217 @@
+![Bend-App](https://avatars.githubusercontent.com/u/242359915?s=40&u=4a6489206dc8754b4822b53922138ba173baa368&v=4)
+
+
+# Bend-App Fastify APP
+
+A production-ready Fastify + Mongoose backend built using ES Modules, Winston logging, Joi-based environment validation, CORS loaded from .env, rate limiting, Prometheus metrics, and graceful shutdown.
+
+
+---
+
+## Features
+
+- Fastify server (high performance, low overhead)
+- Helmet security headers
+- Configurable CORS loaded from environment variables
+- Rate limiting with @fastify/rate-limit
+- Mongoose database integration
+- Winston logger with daily log rotation
+- Request ID middleware
+- Centralized error handling
+- Prometheus metrics at /metrics
+- Health endpoint at /health
+- Root metadata endpoint at /
+
+---
+
+## Folder Structure
+
+```
+src/
+  server.js
+  app.js
+
+  config/
+    index.js
+    db.js
+
+  plugins/
+    logger.plugin.js
+    requestId.plugin.js
+    mongoose.plugin.js
+    cors.plugin.js
+    rateLimit.plugin.js
+    metrics.plugin.js
+
+  routes/
+    user.route.js
+
+  controllers/
+    user.controller.js
+
+  services/
+    user.service.js
+
+  models/
+    user.model.js
+
+  schemas/
+    user.schema.js
+
+  utils/
+    helpers.js
+
+logs/
+```
+
+---
+
+## Requirements
+
+- Node.js 20+
+- MongoDB 5+
+- npm 9+
+
+---
+
+## Installation
+
+1. Install dependencies:
+
+```
+npm install
+```
+
+2. Create a .env file:
+
+```
+PORT=4000
+NODE_ENV=development
+MONGO_URI=mongodb://localhost:27017/myapp
+APP_NAME=Bend-App
+TRUST_PROXY=false
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX=100
+LOG_LEVEL=info
+CORS_ORIGIN=*
+```
+
+3. Start development server:
+
+```
+npm run dev
+```
+
+4. Production start:
+
+```
+npm start
+```
+
+---
+
+## API Endpoints
+
+Health:
+```
+GET /health
+```
+
+Root metadata:
+```
+GET /
+```
+
+Prometheus metrics:
+```
+GET /metrics
+```
+
+Users:
+```
+GET    /api/v1/users
+POST   /api/v1/users
+GET    /api/v1/users/:id
+```
+
+---
+
+## Environment Variables
+
+```
+PORT
+NODE_ENV
+MONGO_URI
+APP_NAME
+TRUST_PROXY
+RATE_LIMIT_WINDOW_MS
+RATE_LIMIT_MAX
+LOG_LEVEL
+CORS_ORIGIN
+```
+
+All validated via Joi at startup.
+
+---
+
+## Logging
+
+Winston logger with:
+
+- Console transport
+- Daily rotated logs
+- Error log rotation
+- Structured request logs with requestId and duration
+
+Logs output to:
+
+```
+logs/
+  application-YYYY-MM-DD.log
+  errors-YYYY-MM-DD.log
+```
+
+---
+
+## Graceful Shutdown
+
+Handles:
+
+- SIGINT  
+- SIGTERM  
+- uncaughtException  
+- unhandledRejection  
+
+Ensures:
+
+- Fastify server closes  
+- Mongoose disconnects  
+- Safe exit  
+
+---
+
+## CORS
+
+CORS_ORIGIN supports:
+
+```
+*
+https://domain.com
+https://a.com,https://b.com
+```
+
+---
+
+## Metrics
+
+Prometheus metrics at:
+
+```
+GET /metrics
+```
+
+---
+
+## License
+
+MIT

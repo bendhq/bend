@@ -1,0 +1,20 @@
+import fp from 'fastify-plugin';
+import promClient from 'prom-client';
+
+const collectDefaultMetrics = promClient.collectDefaultMetrics;
+
+async function metricsPlugin(fastify) {
+  collectDefaultMetrics();
+
+  fastify.get('/metrics', async (request, reply) => {
+    try {
+      reply.header('Content-Type', promClient.register.contentType);
+      const metrics = await promClient.register.metrics();
+      return reply.send(metrics);
+    } catch (err) {
+      reply.status(500).send(err.message);
+    }
+  });
+}
+
+export default fp(metricsPlugin, { name: 'prom-metrics' });

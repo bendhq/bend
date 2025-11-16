@@ -1,0 +1,28 @@
+import fp from 'fastify-plugin';
+import fastifyCors from '@fastify/cors';
+import config from '../config/index.js';
+
+function parseCorsOrigins(value) {
+  if (!value) return '*';
+  if (value.trim() === '*') return '*';
+  return value.split(',').map((o) => o.trim()).filter(Boolean);
+}
+
+const allowedOrigins = parseCorsOrigins(config.corsOrigin);
+
+async function corsPlugin(fastify) {
+  await fastify.register(fastifyCors, {
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      if (allowedOrigins === '*' || (Array.isArray(allowedOrigins) && allowedOrigins.includes(origin))) {
+        return cb(null, true);
+      }
+      return cb(new Error('Not allowed by CORS: ' + origin));
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-Id'],
+    credentials: true
+  });
+}
+
+export default fp(corsPlugin, { name: 'cors-plugin' });
