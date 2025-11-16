@@ -1,12 +1,16 @@
-# Bend
+<p align="center">
+  <img src="https://raw.githubusercontent.com/bendhq/bend/main/public/bend_logo.png" width="200" alt="Bend App Logo" />
+</p>
+
 [![npm version](https://img.shields.io/npm/v/bendjs.svg)](https://www.npmjs.com/package/bendjs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![Node.js Version](https://img.shields.io/badge/node-%5E20.19.0%20%7C%7C%20%3E%3D22.12.0-green)
 
-**Bend — The modern backend project generator and bundler.**
+# Bend
+**Bend - The modern backend project generator and bundler.**
 
 Bend helps developers quickly create clean, production-ready backend projects.  
-Choose your preferred language, framework, and ORM — Bend scaffolds a complete backend with everything configured and ready to run.
+Choose your preferred language, framework, and ORM - Bend scaffolds a complete backend with everything configured and ready to run.
 
 ---
 
@@ -134,12 +138,13 @@ Open an issue or PR on [GitHub](https://github.com/bendhq/bend).
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).  
-© 2025 [BendHQ](https://github.com/bendhq)
+© 2025 [BendHQ](https://bendhq.org)
 
 ---
 
 ## Links
 
+- **Bend Website:** https://bendhq.org 
 - **GitHub:** https://github.com/bendhq/bend  
 - **npm (main CLI):** https://www.npmjs.com/package/bendjs  
 - **npm (one-liner shim):** https://www.npmjs.com/package/create-bend  
