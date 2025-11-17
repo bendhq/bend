@@ -9,6 +9,7 @@ import type {
   GenerateResult,
   WriterOptions,
   TemplateFileMeta,
+  Context,
 } from '../types';
 
 const TMP = '.tmp';
@@ -94,7 +95,7 @@ async function handleEjs(
   entry: TemplateFileMeta,
   templatesRoot: string,
   dest: string,
-  context: unknown,
+  context: Context,
   skipCache: boolean,
   created: string[],
   skipped: string[]
@@ -143,7 +144,7 @@ async function handleBinary(
       } catch {}
     }
     try {
-      await fs.link(path.join(CACHE, sum), dest);
+      await fs.link(cache, dest);
       await fs.chmod(dest, entry.mode & 0o777);
       created.push(dest);
       return;
@@ -168,13 +169,12 @@ export async function generateProjectFromTemplate(
 ): Promise<GenerateResult> {
   const root = path.resolve(opts.templatesRoot);
   const out = path.resolve(opts.targetRoot);
-  const ctx = opts.context ?? {};
+  const ctx = (opts.context ?? {}) as Context;
   const skipCache = !!opts.skipCache;
   const lim = limitPool(opts.concurrency ?? CONCURRENCY);
 
   await ensureCache();
   const index: TemplateFileMeta[] = await loadTemplateIndex(root);
-
 
   const created: string[] = [];
   const skipped: string[] = [];
@@ -183,15 +183,11 @@ export async function generateProjectFromTemplate(
     lim(async () => {
       const rel = mapName(entry.rel);
       const dest = path.join(out, rel);
-
       await mkdir(path.dirname(dest));
-
       if (entry.rel.endsWith('.ejs'))
         return handleEjs(entry, root, dest, ctx, skipCache, created, skipped);
-
       if (isBinarySync(entry.abs))
         return handleBinary(entry, dest, skipCache, created, skipped);
-
       return handleText(entry, dest, created);
     })
   );
@@ -204,13 +200,12 @@ export async function generateProjectFromTemplate(
 export async function writeTree(opts: WriterOptions) {
   const root = path.resolve(opts.templatesRoot);
   const out = path.resolve(opts.targetRoot);
-  const ctx = opts.context ?? {};
+  const ctx = (opts.context ?? {}) as Context;
   const skipCache = !!opts.skipCache;
   const lim = limitPool(opts.concurrency ?? CONCURRENCY);
 
   await ensureCache();
   const index: TemplateFileMeta[] = await loadTemplateIndex(root);
-
 
   const created: string[] = [];
   const skipped: string[] = [];
@@ -220,7 +215,6 @@ export async function writeTree(opts: WriterOptions) {
       const rel = mapName(entry.rel);
       const dest = path.join(out, rel);
       await mkdir(path.dirname(dest));
-
       if (entry.rel.endsWith('.ejs')) {
         const rendered = await render(root, entry.abs, ctx);
         const buf = Buffer.from(rendered, 'utf8');
@@ -245,7 +239,6 @@ export async function writeTree(opts: WriterOptions) {
         }
         return;
       }
-
       if (isBinarySync(entry.abs)) {
         if (!skipCache) {
           const sum = await hashFile(entry.abs);
@@ -276,7 +269,6 @@ export async function writeTree(opts: WriterOptions) {
         opts.onFileWritten?.(dest);
         return;
       }
-
       const raw = await fs.readFile(entry.abs, 'utf8');
       await atomicWrite(dest, Buffer.from(raw, 'utf8'), entry.mode);
       created.push(dest);
