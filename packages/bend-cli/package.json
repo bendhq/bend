@@ -1,0 +1,9 @@
+{
+  "name": "bend",
+  "version": "1.0.0",
+  "description": "Bend CLI wrapper (tiny binary package)",
+  "bin": { "bend": "bin/bend" },
+  "files": ["bin"],
+  "dependencies": { "bend-core": "workspace:^" },
+  "scripts": { "build": "echo skip" }
+}
