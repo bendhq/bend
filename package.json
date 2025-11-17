@@ -7,5 +7,8 @@
     "build:core": "pnpm --filter bend-core run build",
     "test": "pnpm -w run test",
     "lint": "pnpm -w run lint"
+  },
+  "dependencies": {
+    "@types/ejs": "^3.1.5"
   }
 }
