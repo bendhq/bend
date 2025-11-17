@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "noEmit": false,
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "bend-core": ["../bend-core/src"],
+      "bend-core/*": ["../bend-core/src/*"]
+    }
+  },
+  "include": ["src", "bin"],
+  "exclude": ["dist", "node_modules"]
+}

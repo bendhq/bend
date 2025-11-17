@@ -5,17 +5,26 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "dist/templates-compiled", "src/templates", "public"],
+  "files": [
+    "dist",
+    "dist/templates-compiled",
+    "src/templates",
+    "public"
+  ],
   "scripts": {
     "build": "tsup src/index.ts src/cli/index.ts --dts --format cjs,esm --out-dir dist && node ../../scripts/compile-templates.mjs",
     "test": "vitest",
     "lint": "eslint src --ext .ts,.js"
   },
   "dependencies": {
-    "ejs": "^3.1.10"
+    "@clack/prompts": "0.11.0",
+    "commander": "14.0.2",
+    "ejs": "^3.1.10",
+    "picocolors": "1.1.1"
   },
   "devDependencies": {
-    "tsup": "^8.5.0",
+    "@types/node": "24.10.1",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^1.0.0"
   }

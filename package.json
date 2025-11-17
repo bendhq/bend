@@ -2,7 +2,6 @@
   "name": "bend-workspace",
   "private": true,
   "version": "0.0.0",
-  "workspaces": ["packages/*"],
   "scripts": {
     "build": "pnpm -w run build",
     "build:core": "pnpm --filter bend-core run build",

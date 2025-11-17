@@ -3,14 +3,14 @@ import { promises as fsp } from "node:fs";
 import pc from "picocolors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ensureDir, copyDirRenderEJS } from "../utils/fs.js";
+import { ensureDir, copyDirRenderEJS } from "../utils/fs";
 import { run } from "../utils/exec.js";
-import { buildDeps } from "../scaffold/deps.js";
-import { toValidPackageName } from "../scaffold/normalize.js";
-import type { Answers, TemplateContext } from "../types.js";
+import { buildDeps } from "../scaffold/deps";
+import { toValidPackageName } from "../scaffold/normalize";
+import type { Answers, TemplateContext } from "../types";
 import { spinner } from "./spinner.js";
 import { pmAvailable } from "../utils/pm.js";
-import { renderFile } from "../scaffold/render.js";
+import { renderFile } from "../scaffold/render";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
