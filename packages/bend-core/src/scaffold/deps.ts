@@ -33,7 +33,7 @@ const versions = {
   hpp: '^0.2.3',
   joi: '^18.0.1',
   mongoose: '^8.19.4',
-  prisma_cli: '6.19.0',
+  prisma_cli: '^6.19.0',
   prisma_client: '^6.19.0',
   dotenv: '^17.2.3',
   prom_client: '^15.1.3',
