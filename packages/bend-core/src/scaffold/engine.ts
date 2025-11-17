@@ -1,23 +1,20 @@
 import path from 'path';
+import { normalizeGenerateOptions } from './normalize';
 import { generateProjectFromTemplate } from './writer';
+import { installDependencies, detectPackageManager } from '../utils/pm';
+import type { GenerateOptions, GenerateResult } from '../types';
 
-export type GenerateOptions = {
-  templatesRoot: string;
-  targetRoot: string;
-  context?: Record<string, any>;
-  skipInstall?: boolean;
-};
+export async function generate(
+  input: Partial<GenerateOptions>
+): Promise<GenerateResult> {
+  const opts = await normalizeGenerateOptions(input);
+  const res = await generateProjectFromTemplate(opts);
 
-export async function generate(options: GenerateOptions) {
-  const res = await generateProjectFromTemplate(options as any);
+  if (!opts.skipInstall) {
+    const cwd = path.resolve(opts.targetRoot);
+    const pm = await detectPackageManager(cwd);
+    await installDependencies(cwd, pm);
+  }
+
   return res;
-}
-
-export default async function run(argv?: string[]) {
-  const cwd = process.cwd();
-  const templatesRoot = path.join(__dirname, '..', 'templates');
-  const projectName = argv && argv[2] ? argv[2] : 'my-app';
-  const targetRoot = path.join(cwd, projectName);
-  await generate({ templatesRoot, targetRoot, context: { projectName } });
-  return { success: true, targetRoot };
 }
