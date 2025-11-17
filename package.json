@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/bendhq/bend/issues"
   },
-  "homepage": "https://github.com/bendhq/bend#readme",
+  "homepage": "https://bendhq.org",
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },

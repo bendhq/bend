@@ -1,0 +1,69 @@
+import fastify from 'fastify';
+import helmet from '@fastify/helmet';
+import compress from '@fastify/compress';
+import config from './config/index.js';
+import loggerPlugin from './plugins/logger.plugin.js';
+import requestIdPlugin from './plugins/requestId.plugin.js';
+import mongoosePlugin from './plugins/mongoose.plugin.js';
+import corsPlugin from './plugins/cors.plugin.js';
+import rateLimitPlugin from './plugins/rateLimit.plugin.js';
+import metricsPlugin from './plugins/metrics.plugin.js';
+import userRoutes from './routes/user.route.js';
+
+const app = fastify({
+  logger: false,
+  trustProxy: config.trustProxy
+});
+
+await app.register(loggerPlugin);
+await app.register(requestIdPlugin);
+await app.register(corsPlugin);
+await app.register(rateLimitPlugin);
+await app.register(metricsPlugin);
+await app.register(compress);
+await app.register(helmet);
+await app.register(mongoosePlugin);
+
+// health
+app.get('/health', async (request, reply) => ({ status: 'ok', timestamp: Date.now() }));
+
+// root route
+app.get('/', async (request, reply) => {
+  return {
+    name: config.appName,
+    version: '1.0.0',
+    description: 'Bend-App API',
+    website: 'https://bendhq.org',
+    status: 'running',
+    timestamp: Date.now()
+  };
+});
+
+// register user routes under /api/v1/users
+await app.register(userRoutes, { prefix: '/api/v1/users' });
+
+// 404 handler is default; use setNotFoundHandler if you want custom
+app.setNotFoundHandler((request, reply) => {
+  reply.status(404).send({ status: 'fail', message: 'Not Found', requestId: request.id });
+});
+
+// error handler
+app.setErrorHandler((error, request, reply) => {
+  const status = error.statusCode || error.status || 500;
+  app.logger?.error?.(error);
+  // use winston instance if available
+  if (app.logger === false && app.decorate && app.hasDecorator('logger')) {
+    // nothing - logger available via plugin as fastify.logger is false
+  }
+  // send structured error
+  const payload = {
+    status: 'error',
+    statusCode: status,
+    message: error.message || 'Internal Server Error',
+    requestId: request.id
+  };
+  if (config.nodeEnv === 'development') payload.stack = error.stack;
+  reply.status(status).send(payload);
+});
+
+export default app;

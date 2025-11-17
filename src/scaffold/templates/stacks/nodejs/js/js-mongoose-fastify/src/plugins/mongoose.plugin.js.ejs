@@ -1,0 +1,19 @@
+import fp from 'fastify-plugin';
+import mongoose from 'mongoose';
+import config from '../config/index.js';
+
+async function mongoosePlugin(fastify, opts) {
+  await mongoose.connect(config.mongoUri, {
+    autoIndex: config.nodeEnv !== 'production',
+    maxPoolSize: 20,
+    serverSelectionTimeoutMS: 5000
+  });
+
+  fastify.decorate('mongoose', mongoose);
+
+  fastify.addHook('onClose', async (fastifyInstance) => {
+    await mongoose.disconnect();
+  });
+}
+
+export default fp(mongoosePlugin, { name: 'mongoose-plugin' });

@@ -1,0 +1,29 @@
+import mongoose from 'mongoose';
+import logger from '../plugins/logger.plugin.js';
+import config from './index.js';
+
+export async function connectDB() {
+  mongoose.set('strictQuery', false);
+
+  mongoose.connection.on('connected', () => console.log('Mongoose connected'));
+  mongoose.connection.on('reconnected', () => console.log('Mongoose reconnected'));
+  mongoose.connection.on('error', (err) => console.error('Mongoose connection error', err));
+  mongoose.connection.on('disconnected', () => console.warn('Mongoose disconnected'));
+
+  const opts = {
+    autoIndex: config.nodeEnv !== 'production',
+    maxPoolSize: 20,
+    serverSelectionTimeoutMS: 5000
+  };
+
+  await mongoose.connect(config.mongoUri, opts);
+}
+
+export async function disconnectDB() {
+  try {
+    await mongoose.disconnect();
+    console.log('Mongoose disconnected gracefully');
+  } catch (err) {
+    console.error('Error disconnecting mongoose', err);
+  }
+}

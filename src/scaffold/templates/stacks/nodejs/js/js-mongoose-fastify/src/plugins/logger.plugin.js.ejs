@@ -1,0 +1,53 @@
+import fp from 'fastify-plugin';
+import { createLogger, format, transports } from 'winston';
+import 'winston-daily-rotate-file';
+import config from '../config/index.js';
+
+const { combine, timestamp, errors, printf } = format;
+
+const logFormat = printf(({ timestamp, level, message, stack, ...meta }) => {
+  const base = `${timestamp} [${level}] ${message || ''}`;
+  const extras = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
+  return stack ? `${base}\n${stack}${extras}` : `${base}${extras}`;
+});
+
+const logger = createLogger({
+  level: config.logLevel,
+  format: combine(timestamp(), errors({ stack: true }), logFormat),
+  transports: [
+    new transports.Console(),
+    new transports.DailyRotateFile({
+      filename: 'logs/application-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      maxFiles: '14d',
+      zippedArchive: true,
+      level: 'info'
+    }),
+    new transports.DailyRotateFile({
+      filename: 'logs/errors-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      level: 'error',
+      maxFiles: '30d',
+      zippedArchive: true
+    })
+  ],
+  exitOnError: false
+});
+
+async function loggerPlugin(fastify, opts) {
+  fastify.decorate('logger', logger);
+
+  fastify.addHook('onRequest', async (request, reply) => {
+    request.logStart = Date.now();
+  });
+
+  fastify.addHook('onResponse', async (request, reply) => {
+    const duration = Date.now() - (request.logStart || Date.now());
+    logger.info(`${request.raw.ip || request.ip} ${request.method} ${request.url} ${reply.statusCode} - ${duration}ms`, {
+      requestId: request.id
+    });
+  });
+}
+
+export default fp(loggerPlugin, { name: 'winston-logger' });
+export { logger };

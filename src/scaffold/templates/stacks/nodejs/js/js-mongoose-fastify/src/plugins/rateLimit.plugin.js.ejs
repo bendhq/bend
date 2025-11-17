@@ -1,0 +1,18 @@
+import fp from 'fastify-plugin';
+import rateLimit from '@fastify/rate-limit';
+import config from '../config/index.js';
+
+async function rateLimitPlugin(fastify) {
+  await fastify.register(rateLimit, {
+    max: config.rateLimitMax,
+    timeWindow: config.rateLimitWindowMs,
+    allowList: [], // optionally pass trusted IPs
+    addHeaders: {
+      'x-ratelimit-limit': true,
+      'x-ratelimit-remaining': true,
+      'x-ratelimit-reset': true
+    }
+  });
+}
+
+export default fp(rateLimitPlugin, { name: 'rate-limit' });

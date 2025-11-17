@@ -1,0 +1,41 @@
+import app from './app.js';
+import config from './config/index.js';
+import { disconnectDB } from './config/db.js';
+
+const PORT = config.port;
+
+async function start() {
+  try {
+    await app.listen({ port: PORT, host: '0.0.0.0' });
+    console.log(`Server listening on port ${PORT}`);
+  } catch (err) {
+    console.error('Failed to start', err);
+    process.exit(1);
+  }
+
+  const graceful = async (signal) => {
+    try {
+      console.warn(`Received ${signal} — closing server`);
+      await app.close();
+      await disconnectDB();
+      console.log('Shutdown complete');
+      process.exit(0);
+    } catch (err) {
+      console.error('Graceful shutdown failed', err);
+      process.exit(1);
+    }
+  };
+
+  process.on('SIGINT', () => graceful('SIGINT'));
+  process.on('SIGTERM', () => graceful('SIGTERM'));
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception', err);
+    process.exit(1);
+  });
+  process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled Rejection', reason);
+    process.exit(1);
+  });
+}
+
+start();
