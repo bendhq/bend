@@ -16,7 +16,6 @@
     "resolveJsonModule": true,
     "noImplicitReturns": true,
     "noImplicitOverride": true,
-    "verbatimModuleSyntax": true,
     "incremental": true,
     "ignoreDeprecations": "6.0",
     "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo/tsconfig.tsbuildinfo",

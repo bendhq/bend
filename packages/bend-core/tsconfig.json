@@ -13,7 +13,8 @@
     "paths": {
       "bend-core/*": ["src/*"],
       "bend-core": ["src/index"]
-    }
+    },
+    "verbatimModuleSyntax": false
   },
   "include": ["src"],
   "exclude": ["dist", "node_modules"]

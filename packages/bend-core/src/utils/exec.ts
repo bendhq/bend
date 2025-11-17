@@ -1,49 +1,160 @@
-import { spawn } from "node:child_process";
-import fs from "node:fs";
+import {
+  spawn as _spawn,
+  spawnSync as _spawnSync,
+  SpawnOptions,
+} from 'child_process';
+import path from 'path';
 
-const isWin = process.platform === "win32";
+type CommonOptions = {
+  cwd?: string;
+  env?: NodeJS.ProcessEnv;
+  shell?: boolean | string;
+  stdio?: 'pipe' | 'inherit' | Array<any>;
+  timeout?: number;
+};
 
-function winWrap(cmd: string, args: string[]) {
-  // Run via cmd.exe to avoid EINVAL/ENOENT quirks on Windows
+export interface ExecResult {
+  code: number | null;
+  signal: NodeJS.Signals | null;
+  stdout: string;
+  stderr: string;
+  error?: Error;
+}
+
+function isBun(): boolean {
+  // @ts-ignore
+  return typeof (globalThis as any).Bun !== 'undefined';
+}
+
+export async function exec(
+  cmd: string,
+  args: string[] = [],
+  opts: CommonOptions = {}
+): Promise<ExecResult> {
+  if (isBun()) {
+    // @ts-ignore
+    const Bun: any = globalThis.Bun;
+    const spawnArgs = [cmd, ...(args || [])];
+    const spawnOpts: any = {
+      cwd: opts.cwd ?? process.cwd(),
+      env: opts.env ?? process.env,
+      shell: !!opts.shell,
+    };
+    try {
+      // @ts-ignore
+      const res = Bun.spawnSync(spawnArgs, spawnOpts);
+      return {
+        code: res.exitCode ?? null,
+        signal: null,
+        stdout:
+          typeof res.stdout === 'string'
+            ? res.stdout
+            : Buffer.from(res.stdout || '').toString('utf8'),
+        stderr:
+          typeof res.stderr === 'string'
+            ? res.stderr
+            : Buffer.from(res.stderr || '').toString('utf8'),
+      };
+    } catch (err: any) {
+      return {
+        code: null,
+        signal: null,
+        stdout: '',
+        stderr: String(err.stack ?? err.message ?? err),
+        error: err,
+      };
+    }
+  }
+
+  return new Promise<ExecResult>(resolve => {
+    const cwd = opts.cwd ?? process.cwd();
+    const spawnOpts: SpawnOptions = {
+      cwd,
+      env: opts.env ?? process.env,
+      shell: Boolean(opts.shell),
+    };
+    const child = _spawn(cmd, args, spawnOpts);
+    let stdout = '';
+    let stderr = '';
+    child.stdout?.on('data', b => (stdout += String(b)));
+    child.stderr?.on('data', b => (stderr += String(b)));
+    child.on('error', err =>
+      resolve({
+        code: null,
+        signal: null,
+        stdout,
+        stderr: stderr + String(err),
+        error: err,
+      })
+    );
+    child.on('close', (code, signal) =>
+      resolve({ code, signal, stdout, stderr })
+    );
+  });
+}
+
+export function execSync(
+  cmd: string,
+  args: string[] = [],
+  opts: CommonOptions = {}
+): ExecResult {
+  if (isBun()) {
+    // @ts-ignore
+    const Bun: any = globalThis.Bun;
+    try {
+      // @ts-ignore
+      const res = Bun.spawnSync([cmd, ...(args || [])], {
+        cwd: opts.cwd ?? process.cwd(),
+        env: opts.env ?? process.env,
+        shell: !!opts.shell,
+      });
+      return {
+        code: res.exitCode ?? null,
+        signal: null,
+        stdout:
+          typeof res.stdout === 'string'
+            ? res.stdout
+            : Buffer.from(res.stdout || '').toString('utf8'),
+        stderr:
+          typeof res.stderr === 'string'
+            ? res.stderr
+            : Buffer.from(res.stderr || '').toString('utf8'),
+      };
+    } catch (err: any) {
+      return {
+        code: null,
+        signal: null,
+        stdout: '',
+        stderr: String(err.stack ?? err.message ?? err),
+        error: err,
+      };
+    }
+  }
+
+  const cwd = opts.cwd ?? process.cwd();
+  const spawned = _spawnSync(cmd, args, {
+    cwd,
+    env: opts.env ?? process.env,
+    shell: Boolean(opts.shell),
+  });
+  const stdout = spawned.stdout ? spawned.stdout.toString('utf8') : '';
+  const stderr = spawned.stderr ? spawned.stderr.toString('utf8') : '';
   return {
-    command: "cmd.exe",
-    args: ["/c", cmd, ...args]
+    code: spawned.status ?? null,
+    signal: spawned.signal ?? null,
+    stdout,
+    stderr,
+    error: spawned.error ?? undefined,
   };
 }
 
-export function run(cmd: string, args: string[], cwd: string): Promise<void> {
-  // Ensure cwd exists to avoid EINVAL
-  if (!fs.existsSync(cwd)) {
-    return Promise.reject(new Error(`run(): cwd does not exist: ${cwd}`));
+export function resolveBin(name: string, cwd = process.cwd()): string | null {
+  try {
+    const p = require.resolve(path.join(name, 'package.json'), {
+      paths: [cwd],
+    });
+    return path.dirname(p);
+  } catch {
+    return null;
   }
-
-  return new Promise((resolve, reject) => {
-    const spec = isWin ? winWrap(cmd, args) : { command: cmd, args };
-
-    const child = spawn(spec.command, spec.args, {
-      cwd,
-      stdio: "inherit",
-      shell: false // no DEP0190
-    });
-
-    child.on("error", (err) => reject(err));
-    child.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(`${cmd} ${args.join(" ")} failed with code ${code}`));
-    });
-  });
-}
-
-export function hasCommand(cmd: string): Promise<boolean> {
-  return new Promise((resolve) => {
-    const spec = isWin ? winWrap(cmd, ["--version"]) : { command: cmd, args: ["--version"] };
-
-    const child = spawn(spec.command, spec.args, {
-      stdio: "ignore",
-      shell: false
-    });
-
-    child.on("error", () => resolve(false));
-    child.on("close", (code) => resolve(code === 0));
-  });
 }
