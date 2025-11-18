@@ -1,5 +1,5 @@
 {
-  "name": "bend",
+  "name": "bendjs",
   "version": "1.0.0",
   "description": "Bend CLI wrapper (tiny binary package)",
   "bin": { "bend": "bin/bend" },

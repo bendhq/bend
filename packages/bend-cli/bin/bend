@@ -1,3 +1,9 @@
-#!/usr/bin/env node
-import run from 'bend-core/dist/cli/index.cjs.js';
-run(process.argv).catch(err => { console.error(err); process.exit(1); });
+#!/usr/bin/env sh
+DIR="$(cd "$(dirname "$0")" && pwd)"
+CORE="${DIR}/../node_modules/bendjs/dist/cli/index.js"
+
+if command -v bun >/dev/null 2>&1; then
+  exec bun "$CORE" "$@"
+else
+  exec node "$CORE" "$@"
+fi
