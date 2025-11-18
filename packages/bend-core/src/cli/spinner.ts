@@ -1,53 +1,53 @@
-import pc from "picocolors";
+const FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+let handle: NodeJS.Timeout | null = null;
+let idx = 0;
+let message = '';
+let enabled = true;
 
-const FRAMES = ["-", "\\", "|", "/"];
+export function setEnabled(v: boolean) {
+  enabled = v;
+}
 
-export class Spinner {
-  private i = 0;
-  private id: ReturnType<typeof setInterval> | null = null;
-  private text = "";
+export function start(msg = '') {
+  if (!enabled) return;
+  stop();
+  message = msg;
+  idx = 0;
+  handle = setInterval(() => {
+    try {
+      process.stdout.write(`\r${FRAMES[idx % FRAMES.length]} ${message}`);
+      idx++;
+    } catch {}
+  }, 80) as unknown as NodeJS.Timeout;
+}
 
-  start(text = "") {
-    this.text = text;
-    if (this.id) return;
-    this.id = setInterval(() => {
-      const frame = FRAMES[(this.i = (this.i + 1) % FRAMES.length)];
-      this.write(`${pc.cyan(frame)} ${this.text}`);
-    }, 80);
-  }
+export function update(msg: string) {
+  if (!enabled) return;
+  message = msg;
+}
 
-  setText(text: string) {
-    this.text = text;
-  }
-
-  stop() {
-    if (this.id) {
-      clearInterval(this.id);
-      this.id = null;
-      this.clearLine();
-    }
-  }
-
-  succeed(text?: string) {
-    this.stop();
-    if (text) this.text = text;
-    process.stdout.write(`${pc.green("ok")} ${this.text}\n`);
-  }
-
-  fail(text?: string) {
-    this.stop();
-    if (text) this.text = text;
-    process.stdout.write(`${pc.red("x")} ${this.text}\n`);
-  }
-
-  private write(s: string) {
-    this.clearLine();
-    process.stdout.write(s);
-  }
-
-  private clearLine() {
-    process.stdout.write("\r\x1b[K");
+export function stop() {
+  if (handle) {
+    clearInterval(handle);
+    handle = null;
+    try {
+      process.stdout.write('\r\x1b[K');
+    } catch {}
   }
 }
 
-export const spinner = new Spinner();
+export function succeed(msg?: string) {
+  stop();
+  if (!enabled) return;
+  try {
+    process.stdout.write(`\r✔ ${msg ?? message}\n`);
+  } catch {}
+}
+
+export function fail(msg?: string) {
+  stop();
+  if (!enabled) return;
+  try {
+    process.stdout.write(`\r✖ ${msg ?? message}\n`);
+  } catch {}
+}
