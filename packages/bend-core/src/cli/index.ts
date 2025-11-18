@@ -1,52 +1,64 @@
-import { program } from "commander";
-import pc from "picocolors";
-import { askSetup } from "./questions.js";
-import { createProject } from "./actions.js";
-import { META } from "./constants.js";
+import path from 'path';
+import type { CLIOptions } from '../types';
+import { normalizeGenerateOptions } from '../scaffold/normalize';
+import { resolveDeps } from '../scaffold/deps';
+import { generateProjectFromTemplate } from '../scaffold/writer';
+import { installDependencies } from '../utils/pm';
+import { log, setSilent } from '../utils/log';
 
-program
-  .name("bend")
-  .description("Bend - modern backend project generator and bundler.")
-  .version(META.version)
-  .showHelpAfterError();
-
-program
-  .command("new")
-  .description("Create a new backend project")
-  .action(async () => {
-    try {
-      const answers = await askSetup();
-      await createProject(answers);
-      console.log(pc.green("Project created successfully."));
-    } catch (err) {
-      console.error(pc.red("Error creating project."));
-      if (err instanceof Error) console.error(pc.red(err.message));
+export async function createProject(
+  inOpts: Partial<CLIOptions>
+): Promise<void> {
+  try {
+    const normalized = await normalizeGenerateOptions(
+      inOpts as Partial<CLIOptions> & { projectName?: string }
+    );
+    const runtime = (inOpts.runtime ?? 'nodejs') as 'nodejs' | 'bun';
+    const language = (inOpts.language ?? 'ts') as 'ts' | 'js';
+    const orm = (inOpts.orm ?? 'mongoose') as 'mongoose' | 'prisma';
+    const framework = (inOpts.framework ?? 'express') as 'express' | 'fastify';
+    const stackDeps = resolveDeps({ runtime, language, orm, framework });
+    const ctx = Object.assign({}, normalized.context ?? {}, {
+      deps: stackDeps.dependencies,
+      devDependencies: stackDeps.devDependencies,
+      scripts: stackDeps.scripts ?? {},
+    });
+    const opts = {
+      templatesRoot: String(normalized.templatesRoot),
+      targetRoot: String(normalized.targetRoot),
+      context: ctx,
+      skipCache: !!normalized.skipCache,
+      concurrency: normalized.concurrency,
+    };
+    setSilent(false);
+    log.info(
+      `Creating project ${String(
+        inOpts.projectName ?? ctx.projectName ?? path.basename(opts.targetRoot)
+      )} at ${opts.targetRoot}`
+    );
+    const result = await generateProjectFromTemplate(opts as any);
+    if (!result.success) {
+      log.error('Generation failed');
       process.exit(1);
     }
-  });
-
-async function runInteractiveFlow() {
-  try {
-    const answers = await askSetup();
-    await createProject(answers);
-    console.log(pc.green("Project created successfully."));
-  } catch (err) {
-    console.error(pc.red("Error creating project."));
-    if (err instanceof Error) console.error(pc.red(err.message));
+    log.success(`Project created: ${opts.targetRoot}`);
+    if (!normalized.skipInstall) {
+      log.info('Installing dependencies...');
+      await installDependencies(
+        opts.targetRoot,
+        normalized.packageManager as any
+      );
+      log.success('Dependencies installed');
+    } else {
+      log.info('Skipping install as requested');
+    }
+  } catch (err: any) {
+    setSilent(false);
+    log.error(String(err?.message ?? err));
     process.exit(1);
   }
 }
 
-async function main() {
-  if (process.argv.length <= 2) {
-    await runInteractiveFlow();
-  } else {
-    await program.parseAsync(process.argv);
-  }
+export async function init(): Promise<void> {
+  /* noop exported for compatibility */
 }
-
-main().catch((err) => {
-  console.error(pc.red("Unexpected error."));
-  if (err instanceof Error) console.error(pc.red(err.message));
-  process.exit(1);
-});
