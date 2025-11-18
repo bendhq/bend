@@ -4,7 +4,7 @@
   "description": "Bend core - template engine, renderer, and templates",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
+  "types": "module",
   "files": [
     "dist",
     "dist/templates-compiled",
