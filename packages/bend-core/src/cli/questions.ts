@@ -1,81 +1,77 @@
-import * as p from "@clack/prompts";
-import pc from "picocolors";
-import type { Answers, Framework, Language, Orm, PackageManager } from "../types.js";
-import { detectPackageManagerHint } from "../utils/pm.js";
+import * as p from '@clack/prompts';
+import pc from 'picocolors';
+import type { CLIOptions } from '../types';
 
-function ensure<T>(val: unknown, _msg: string): T {
-  if (p.isCancel(val)) {
-    p.cancel("Operation cancelled.");
+export async function askQuestions(): Promise<CLIOptions> {
+  const runtime = await p.select({
+    message: 'Choose a runtime',
+    options: [
+      { value: 'nodejs', label: 'Node.js' },
+      { value: 'bun', label: 'Bun' },
+    ],
+  });
+  if (p.isCancel(runtime)) {
+    p.cancel('Operation aborted');
     process.exit(1);
   }
-  return val as T;
-}
 
-export async function askSetup(): Promise<Answers> {
-  p.intro(pc.cyan("Bend - backend project generator"));
+  const language = await p.select({
+    message: 'Choose a language',
+    options: [
+      { value: 'ts', label: 'TypeScript' },
+      { value: 'js', label: 'JavaScript' },
+    ],
+  });
+  if (p.isCancel(language)) {
+    p.cancel('Operation aborted');
+    process.exit(1);
+  }
 
-  const language = ensure<Language>(
-    await p.select({
-      message: "Choose language:",
-      options: [
-        { label: pc.blue("TypeScript (TS)"), value: "typescript" },
-        { label: pc.yellow("JavaScript (JS)"), value: "javascript" }
-      ]
-    }),
-    "Language is required"
-  );
+  const orm = await p.select({
+    message: 'Choose an ORM',
+    options: [
+      { value: 'mongoose', label: 'Mongoose' },
+      { value: 'prisma', label: 'Prisma' },
+    ],
+  });
+  if (p.isCancel(orm)) {
+    p.cancel('Operation aborted');
+    process.exit(1);
+  }
 
-  const framework = ensure<Framework>(
-    await p.select({
-      message: "Choose framework:",
-      options: [
-        { label: "Express", value: "express" },
-        { label: "Fastify", value: "fastify" }
-      ]
-    }),
-    "Framework is required"
-  );
+  const framework = await p.select({
+    message: 'Choose a framework',
+    options: [
+      { value: 'express', label: 'Express' },
+      { value: 'fastify', label: 'Fastify' },
+    ],
+  });
+  if (p.isCancel(framework)) {
+    p.cancel('Operation aborted');
+    process.exit(1);
+  }
 
-  const orm = ensure<Orm>(
-    await p.select({
-      message: "Choose ORM:",
-      options: [
-        { label: "Mongoose", value: "mongoose" },
-        { label: "Prisma", value: "prisma" },
-        { label: "None", value: "none" }
-      ]
-    }),
-    "ORM is required"
-  );
+  const projectName = await p.text({
+    message: 'Project name',
+    placeholder: 'my-app',
+    defaultValue: 'my-app',
+    validate(value) {
+      if (!String(value).trim()) return 'Name cannot be empty';
+      return undefined;
+    },
+  });
+  if (p.isCancel(projectName)) {
+    p.cancel('Operation aborted');
+    process.exit(1);
+  }
 
-  const name = ensure<string>(
-    await p.text({
-      message: "Project name:",
-      placeholder: "Bend-App",
-      validate(v) {
-        if (!v || !v.trim()) return "Project name is required";
-        if (v.length > 214) return "Project name is too long";
-      }
-    }),
-    "Project name is required"
-  );
+  p.log.info(pc.green('Configuration complete'));
 
-  const hinted = detectPackageManagerHint();
-
-  const pkgm = ensure<PackageManager>(
-    await p.select({
-      message: "Package manager:",
-      initialValue: hinted,
-      options: [
-        { label: "npm", value: "npm" },
-        { label: "pnpm", value: "pnpm" },
-        { label: "yarn", value: "yarn" },
-        { label: "bun", value: "bun" }
-      ]
-    }),
-    "Package manager is required"
-  );
-
-  p.outro(pc.green("Configuration captured."));
-  return { language, framework, orm, name, pkgm };
+  return {
+    runtime: runtime as CLIOptions['runtime'],
+    language: language as CLIOptions['language'],
+    orm: orm as CLIOptions['orm'],
+    framework: framework as CLIOptions['framework'],
+    projectName: String(projectName),
+  };
 }
