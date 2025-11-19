@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/bendhq/bend/main/public/bend_logo.png" width="200" alt="Bend App Logo" />
+  <img src="https://raw.githubusercontent.com/bendhq/bend/main/packages/bend-core/public/bend_logo.png" width="200" alt="Bend App Logo" />
 </p>
 
 # 🏗️ Bend - The Backend Bundler
@@ -250,12 +250,22 @@ LOG_LEVEL=info
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
+## License
 
-MIT © Bend
+This project is licensed under the [MIT License](./LICENSE).  
+© 2025 [BendHQ](https://bendhq.org)
 
+---
+
+## Links
+
+- **Bend Website:** https://bendhq.org 
+- **GitHub:** https://github.com/bendhq/bend  
+- **npm (main CLI):** https://www.npmjs.com/package/bendjs  
+- **npm (one-liner shim):** https://www.npmjs.com/package/create-bend  
+- **Issues:** https://github.com/bendhq/bend/issues
 ## 🙏 Acknowledgments
 
-- Inspired by [Vite](https://vitejs.dev/)
+- Inspired by [Vite](https://vite.dev/)
 - Built with [tsup](https://tsup.egoist.dev/)
 - CLI powered by [@clack/prompts](https://github.com/natemoo-re/clack)
