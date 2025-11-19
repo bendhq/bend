@@ -12,13 +12,13 @@ Production-ready backend scaffolder for Node.js and Bun.
 
 ## Features
 
-- 🚀 **Fast Project Setup**: Generate complete backend projects in seconds
-- 🎯 **Multiple Frameworks**: Express or Fastify
-- 📝 **TypeScript & JavaScript**: Full support for both
-- 💾 **Database Support**: Mongoose (MongoDB) or Prisma (SQL)
-- ⚡ **Runtime Agnostic**: Works with Node.js and Bun
-- 🔒 **Production Ready**: Security, logging, error handling included
-- 📦 **Package Manager Agnostic**: npm, pnpm, yarn, bun all supported
+- **Fast Project Setup**: Generate complete backend projects in seconds
+- **Multiple Frameworks**: Express or Fastify
+- **TypeScript & JavaScript**: Full support for both
+- **Database Support**: Mongoose (MongoDB) or Prisma (SQL)
+- **Runtime Agnostic**: Works with Node.js and Bun
+- **Production Ready**: Security, logging, error handling included
+- **Package Manager Agnostic**: npm, pnpm, yarn, bun all supported
 
 ## Installation
 
@@ -59,14 +59,14 @@ await createProject({
 
 Each generated project includes:
 
-- ✅ **Security Headers** (Helmet)
-- ✅ **CORS Configuration**
-- ✅ **Rate Limiting**
-- ✅ **Request Logging** (Morgan/Pino)
-- ✅ **Error Handling** (Global error middleware)
-- ✅ **Environment Variables** (.env setup)
-- ✅ **Graceful Shutdown**
-- ✅ **Production Structure** (controllers, services, models, routes)
+- **Security Headers** (Helmet)
+- **CORS Configuration**
+- **Rate Limiting**
+- **Request Logging** (Morgan/Pino)
+- **Error Handling** (Global error middleware)
+- **Environment Variables** (.env setup)
+- **Graceful Shutdown**
+- **Production Structure** (controllers, services, models, routes)
 
 ## Supported Stacks
 

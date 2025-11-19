@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![Node.js Version](https://img.shields.io/badge/node-%5E20.19.0%20%7C%7C%20%3E%3D22.12.0-green)
 
-The official initializer for [Bend](https://github.com/yourusername/bend) - a production-ready backend scaffolder.
+The official initializer for [Bend](https://github.com/bendhq/bend) - a production-ready backend scaffolder.
 
 ## Usage
 
@@ -46,11 +46,11 @@ Bend is a backend project scaffolder that helps you quickly create production-re
 - **Runtimes**: Node.js or Bun
 
 Each generated project includes:
-- ✅ Security best practices (Helmet, CORS, Rate limiting)
-- ✅ Logging with Winston (or Pino for Fastify)
-- ✅ Error handling
-- ✅ Environment configuration
-- ✅ Production-ready structure
+- Security best practices (Helmet, CORS, Rate limiting)
+- Logging with Winston (or Pino for Fastify)
+- Error handling
+- Environment configuration
+- Production-ready structure
 
 ## Options
 

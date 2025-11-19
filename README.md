@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/bendhq/bend/main/packages/bend-core/public/bend_logo.png" width="200" alt="Bend App Logo" />
 </p>
 
-# 🏗️ Bend - The Backend Bundler
+# Bend - The Backend Bundler
 
 [![npm version](https://img.shields.io/npm/v/bendjs.svg)](https://www.npmjs.com/package/bendjs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
@@ -10,16 +10,16 @@
 
 **Bend is a production-ready backend scaffolder** - like Vite for backend development. Create clean, optimized backend projects with best practices baked in.
 
-## ✨ Features
+## Features
 
-- 🚀 **Smart Detection** - Automatically detects runtime (Node.js/Bun) and package manager (npm/pnpm/yarn/bun)
-- 🎯 **Interactive CLI** - User-friendly prompts for configuration
-- 📦 **Multiple Stacks** - Support for Express/Fastify with Mongoose/Prisma
-- 🔒 **Production Ready** - Security headers, rate limiting, error handling, logging
-- ⚡ **Fast** - Optimized project setup with minimal dependencies
-- 🎨 **TypeScript First** - Full TypeScript support with proper typing
+- **Smart Detection** - Automatically detects runtime (Node.js/Bun) and package manager (npm/pnpm/yarn/bun)
+- **Interactive CLI** - User-friendly prompts for configuration
+- **Multiple Stacks** - Support for Express/Fastify with Mongoose/Prisma
+- **Production Ready** - Security headers, rate limiting, error handling, logging
+- **Fast** - Optimized project setup with minimal dependencies
+- **TypeScript First** - Full TypeScript support with proper typing
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Recommended: Using npm create
 
@@ -44,7 +44,7 @@ yarn create bend
 bunx create-bend
 ```
 
-## 📦 Published Packages
+## Published Packages
 
 Bend is published as three separate npm packages:
 
@@ -58,18 +58,6 @@ Bend is published as three separate npm packages:
    
 3. **`bendjs`** - Global CLI wrapper (optional)
    - For users who prefer `npm install -g bendjs`
-   - Then use `bend` command globally
-
-### Development (from this repo)
-
-```bash
-# Clone the repository
-git clone <repo-url>
-cd bend
-
-# Install dependencies
-pnpm install
-
 # Build all packages
 pnpm build
 
@@ -77,7 +65,7 @@ pnpm build
 node packages/bend-core/dist/cli/index.js
 ```
 
-## 🎯 Tech Stack Options
+## Tech Stack Options
 
 ### Runtimes
 - **Node.js** (Auto-detected)
@@ -95,7 +83,7 @@ node packages/bend-core/dist/cli/index.js
 - **MongoDB + Mongoose** - NoSQL with schema validation
 - **SQL + Prisma** - PostgreSQL, MySQL, SQLite support
 
-## 📁 Generated Project Structure
+## Generated Project Structure
 
 ```
 my-backend/
@@ -121,32 +109,32 @@ my-backend/
 └── README.md
 ```
 
-## 🛡️ Built-in Production Features
+## Built-in Production Features
 
 ### Security
-- ✅ Helmet - Security headers
-- ✅ CORS - Cross-origin resource sharing
-- ✅ HPP - HTTP parameter pollution prevention (Express)
-- ✅ Rate Limiting - DDoS protection
+- Helmet - Security headers
+- CORS - Cross-origin resource sharing
+- HPP - HTTP parameter pollution prevention (Express)
+- Rate Limiting - DDoS protection
 
 ### Logging
-- ✅ Winston - Structured logging
-- ✅ Daily log rotation
-- ✅ Separate error logs
-- ✅ Morgan - HTTP request logging
+- Winston - Structured logging
+- Daily log rotation
+- Separate error logs
+- Morgan - HTTP request logging
 
 ### Error Handling
-- ✅ Async error handling
-- ✅ Centralized error middleware
-- ✅ Graceful shutdown
-- ✅ Unhandled rejection/exception handling
+- Async error handling
+- Centralized error middleware
+- Graceful shutdown
+- Unhandled rejection/exception handling
 
 ### Performance
-- ✅ Compression - Response compression
-- ✅ Optimized configurations
-- ✅ Connection pooling (MongoDB)
+- Compression - Response compression
+- Optimized configurations
+- Connection pooling (MongoDB)
 
-## 🔧 Development
+## Development
 
 ### Project Structure (Monorepo)
 
@@ -200,7 +188,7 @@ pnpm lint
 3. Update `deps.ts` for dependency resolution
 4. Rebuild: `pnpm build:core`
 
-## 📖 Usage Examples
+## Usage Examples
 
 ### Basic Setup
 
@@ -232,7 +220,7 @@ JWT_SECRET=your-secret-key
 LOG_LEVEL=info
 ```
 
-## 🎯 Roadmap
+## Roadmap
 
 - [x] CLI with interactive prompts
 - [x] Runtime detection (Node.js/Bun)
@@ -246,7 +234,7 @@ LOG_LEVEL=info
 - [ ] API documentation (Swagger/OpenAPI)
 - [ ] GraphQL support
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -264,7 +252,7 @@ This project is licensed under the [MIT License](./LICENSE).
 - **npm (main CLI):** https://www.npmjs.com/package/bendjs  
 - **npm (one-liner shim):** https://www.npmjs.com/package/create-bend  
 - **Issues:** https://github.com/bendhq/bend/issues
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Inspired by [Vite](https://vite.dev/)
 - Built with [tsup](https://tsup.egoist.dev/)

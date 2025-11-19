@@ -2,6 +2,12 @@
   "name": "bend-workspace",
   "private": true,
   "version": "0.0.0",
+  "author": "Dhiraj",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bendhq/bend.git"
+  },
+  "homepage": "https://bendhq.org",
   "scripts": {
     "build": "pnpm --filter bend-core run build && pnpm --filter bendjs run build",
     "build:core": "pnpm --filter bend-core run build",

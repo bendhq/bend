@@ -22,13 +22,14 @@
     "bun",
     "create"
   ],
-  "author": "Your Name",
+  "author": "Dhiraj",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/bend.git",
+    "url": "https://github.com/bendhq/bend.git",
     "directory": "packages/create-bend"
   },
+  "homepage": "https://bendhq.org",
   "engines": {
     "node": ">=18.0.0"
   },
