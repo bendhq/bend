@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-DIR="$(cd "$(dirname "$0")" && pwd)"
-CORE="${DIR}/../node_modules/bendjs/dist/cli/index.js"
-
-if command -v bun >/dev/null 2>&1; then
-  exec bun "$CORE" "$@"
-else
-  exec node "$CORE" "$@"
-fi

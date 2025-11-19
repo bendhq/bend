@@ -1,0 +1,72 @@
+# <%= projectName %>
+
+A production-ready backend application built with **Bend**.
+
+## 🚀 Stack
+
+- **Runtime**: Node.js
+- **Language**: TypeScript
+- **Framework**: Express
+- **Database**: MongoDB (Mongoose)
+
+## 📦 Installation
+
+```bash
+npm install
+```
+
+## 🔧 Configuration
+
+Create a `.env` file in the root directory (or use the provided `.env` file):
+
+```env
+MONGODB_URI=mongodb://localhost:27017/<%= projectName %>
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=your-secret-key-change-this-in-production
+LOG_LEVEL=info
+```
+
+## 🏃 Running the Application
+
+### Development Mode
+```bash
+npm run dev
+```
+
+### Production Mode
+```bash
+npm run build
+npm start
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── config/         # Configuration files (database, logger, etc.)
+├── controllers/    # Route controllers
+├── models/         # Mongoose models
+├── routes/         # Express routes
+├── services/       # Business logic
+├── middlewares/    # Custom middlewares
+├── utils/          # Utility functions
+├── app.ts          # Express app setup
+└── server.ts       # Server entry point
+```
+
+## 🛡️ Features
+
+- ✅ **TypeScript** for type safety
+- ✅ **Express** with async error handling
+- ✅ **Mongoose** for MongoDB
+- ✅ **Helmet** for security headers
+- ✅ **CORS** enabled
+- ✅ **Rate limiting** configured
+- ✅ **Winston** logger with daily rotation
+- ✅ **Environment variables** with dotenv
+- ✅ **Validation** with Joi
+
+## 📝 License
+
+MIT

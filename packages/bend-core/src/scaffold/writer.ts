@@ -17,9 +17,16 @@ const CONCURRENCY = Math.max(2, (os.cpus().length || 2) * 2);
 const CACHE = path.join(os.homedir(), '.bend_core_cache');
 
 function mapName(n: string) {
-  if (n.startsWith('_')) return '.' + n.slice(1);
-  if (n.endsWith('.ejs')) return n.slice(0, -4);
-  return n;
+  let result = n;
+  // Handle underscore prefix (convert to dot for dotfiles)
+  if (result.startsWith('_')) {
+    result = '.' + result.slice(1);
+  }
+  // Handle .ejs suffix (strip it)
+  if (result.endsWith('.ejs')) {
+    result = result.slice(0, -4);
+  }
+  return result;
 }
 
 async function mkdir(p: string) {

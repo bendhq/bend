@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "build": "pnpm -w run build",
+    "build": "pnpm --filter bend-core run build && pnpm --filter bendjs run build",
     "build:core": "pnpm --filter bend-core run build",
     "test": "pnpm -w run test",
     "lint": "pnpm -w run lint"

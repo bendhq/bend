@@ -3,17 +3,7 @@ import pc from 'picocolors';
 import type { CLIOptions } from '../types';
 
 export async function askQuestions(): Promise<CLIOptions> {
-  const runtime = await p.select({
-    message: 'Choose a runtime',
-    options: [
-      { value: 'nodejs', label: 'Node.js' },
-      { value: 'bun', label: 'Bun' },
-    ],
-  });
-  if (p.isCancel(runtime)) {
-    p.cancel('Operation aborted');
-    process.exit(1);
-  }
+
 
   const language = await p.select({
     message: 'Choose a language',
@@ -68,7 +58,7 @@ export async function askQuestions(): Promise<CLIOptions> {
   p.log.info(pc.green('Configuration complete'));
 
   return {
-    runtime: runtime as CLIOptions['runtime'],
+
     language: language as CLIOptions['language'],
     orm: orm as CLIOptions['orm'],
     framework: framework as CLIOptions['framework'],

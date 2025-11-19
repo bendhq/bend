@@ -1,20 +1,60 @@
 {
   "name": "bend-core",
   "version": "1.0.0",
-  "description": "Bend core - template engine, renderer, and templates",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "types": "module",
+  "description": "Production-ready backend scaffolder for Node.js and Bun - Core library",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "bend-core": "./dist/cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/cli/index.mjs",
+      "require": "./dist/cli/index.js",
+      "types": "./dist/cli/index.d.ts"
+    }
+  },
   "files": [
     "dist",
-    "dist/templates-compiled",
-    "src/templates",
-    "public"
+    "src/scaffold/templates",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/cli/index.ts --dts --format cjs,esm --out-dir dist && node ../../scripts/compile-templates.mjs",
+    "build": "tsup src/index.ts src/cli/index.ts --format cjs,esm --out-dir dist && node ../../scripts/compile-templates.mjs",
     "test": "vitest",
     "lint": "eslint src --ext .ts,.js"
+  },
+  "keywords": [
+    "backend",
+    "scaffolder",
+    "generator",
+    "express",
+    "fastify",
+    "mongoose",
+    "prisma",
+    "typescript",
+    "javascript",
+    "nodejs",
+    "bun",
+    "cli",
+    "template"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/bend.git",
+    "directory": "packages/bend-core"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@clack/prompts": "0.11.0",

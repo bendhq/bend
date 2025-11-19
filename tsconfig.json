@@ -17,17 +17,12 @@
     "noImplicitReturns": true,
     "noImplicitOverride": true,
     "incremental": true,
-    "ignoreDeprecations": "6.0",
-    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo/tsconfig.tsbuildinfo",
     "paths": {
       "bend-core": ["packages/bend-core/src"],
-      "bend-core/*": ["packages/bend-core/src/*"],
-      "bend": ["packages/bend-cli/src"],
-      "bend/*": ["packages/bend-cli/src/*"]
+      "bend-core/*": ["packages/bend-core/src/*"]
     }
   },
   "references": [
-    { "path": "packages/bend-core" },
-    { "path": "packages/bend-cli" }
+    { "path": "packages/bend-core" }
   ]
 }

@@ -94,6 +94,8 @@ export function resolveDeps(input: StackInput): StackDeps {
     deps['@fastify/cors'] = versions.fastify_cors;
     deps['fastify-plugin'] = versions.fastify_plugin;
     deps.joi = versions.joi;
+    deps.pino = versions.pino;
+    deps['pino-pretty'] = versions.pino_pretty;
     scripts.start =
       input.runtime === 'bun' ? 'bun run src/server.js' : 'node src/server.js';
     scripts.dev =
@@ -122,25 +124,24 @@ export function resolveDeps(input: StackInput): StackDeps {
     dev.eslint = versions.eslint;
     if (input.framework === 'express')
       dev['@types/express'] = versions.types_express;
-    dev.build = 'tsc -b';
+    scripts.build = 'tsc -b';
     if (input.runtime === 'bun') {
       scripts.dev = 'bun run src/server.ts';
       scripts.start = 'bun run src/server.ts';
     } else {
-      scripts.dev =
-        scripts.dev ||
-        'nodemon --watch src --exec "ts-node --esm src/server.ts"';
-      scripts.start = scripts.start || 'node dist/server.js';
+      // Force overwrite for TS
+      scripts.dev = 'nodemon --watch src --exec "ts-node --esm src/server.ts"';
+      scripts.start = 'node dist/server.js';
     }
   } else {
     dev.nodemon = versions.nodemon;
     dev.eslint = dev.eslint || versions.eslint;
     if (input.runtime === 'bun') {
-      scripts.dev = scripts.dev || 'bun run src/server.js';
-      scripts.start = scripts.start || 'bun run src/server.js';
+      scripts.dev = 'bun run src/server.js';
+      scripts.start = 'bun run src/server.js';
     } else {
-      scripts.dev =
-        scripts.dev || 'nodemon --watch src --exec "node src/server.js"';
+      // Default JS scripts (already set in framework block, but ensuring consistency)
+      scripts.dev = scripts.dev || 'nodemon --watch src --exec "node src/server.js"';
       scripts.start = scripts.start || 'node src/server.js';
     }
   }

@@ -1,0 +1,14 @@
+{
+  "name": "<%= projectName %>",
+  "version": "1.0.0",
+  "description": "Backend project created with Bend",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": <%- JSON.stringify(scripts || {}, null, 2) %>,
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": <%- JSON.stringify(deps || {}, null, 2) %>,
+  "devDependencies": <%- JSON.stringify(devDependencies || {}, null, 2) %>
+}
+

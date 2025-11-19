@@ -29,14 +29,23 @@ export function templatesFolderFor(input: {
   framework: 'express' | 'fastify';
 }): string {
   const stackName = `${input.language}-${input.orm}-${input.framework}`;
-  return path.join(
+  
+  // When running from dist, we need to go up to the package root and into src
+  // __dirname in dist will be something like: /path/to/bend-core/dist/scaffold
+  // We need to get to: /path/to/bend-core/src/scaffold/templates
+  const templatesPath = path.join(
     __dirname,
+    '..', // up from scaffold
+    '..', // up from dist
+    'src',
+    'scaffold',
     'templates',
     'stacks',
-    input.runtime,
-    input.language,
+    input.language,  // Templates are runtime-agnostic (work for both Node.js and Bun)
     stackName
   );
+  
+  return templatesPath;
 }
 
 export async function normalizeGenerateOptions(

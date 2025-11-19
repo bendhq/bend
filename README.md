@@ -2,150 +2,260 @@
   <img src="https://raw.githubusercontent.com/bendhq/bend/main/public/bend_logo.png" width="200" alt="Bend App Logo" />
 </p>
 
+# 🏗️ Bend - The Backend Bundler
+
 [![npm version](https://img.shields.io/npm/v/bendjs.svg)](https://www.npmjs.com/package/bendjs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![Node.js Version](https://img.shields.io/badge/node-%5E20.19.0%20%7C%7C%20%3E%3D22.12.0-green)
 
-# Bend
-**Bend - The modern backend project generator and bundler.**
+**Bend is a production-ready backend scaffolder** - like Vite for backend development. Create clean, optimized backend projects with best practices baked in.
 
-Bend helps developers quickly create clean, production-ready backend projects.  
-Choose your preferred language, framework, and ORM - Bend scaffolds a complete backend with everything configured and ready to run.
+## ✨ Features
 
----
+- 🚀 **Smart Detection** - Automatically detects runtime (Node.js/Bun) and package manager (npm/pnpm/yarn/bun)
+- 🎯 **Interactive CLI** - User-friendly prompts for configuration
+- 📦 **Multiple Stacks** - Support for Express/Fastify with Mongoose/Prisma
+- 🔒 **Production Ready** - Security headers, rate limiting, error handling, logging
+- ⚡ **Fast** - Optimized project setup with minimal dependencies
+- 🎨 **TypeScript First** - Full TypeScript support with proper typing
 
-## Quick Start
+## 🚀 Quick Start
 
-### One-liner (recommended)
-Use the creator package:
+### Recommended: Using npm create
 
 ```bash
-# npm
+# Latest version
 npm create bend@latest
 
-# pnpm
+# With project name
+npm create bend@latest my-backend
+```
+
+### Other Package Managers
+
+```bash
+# Using pnpm
 pnpm create bend
 
-# yarn
+# Using yarn
 yarn create bend
 
-# bun
-bun create bend
-# or
+# Using bun
 bunx create-bend
 ```
 
-### Direct CLI (no shim)
-Run the main CLI package directly:
+## 📦 Published Packages
+
+Bend is published as three separate npm packages:
+
+1. **`create-bend`** - Initializer (recommended for users)
+   - Used via `npm create bend`
+   - Downloads and runs `bend-core` automatically
+   
+2. **`bend-core`** - Core library with templates
+   - Can be used programmatically
+   - Contains all scaffolding logic
+   
+3. **`bendjs`** - Global CLI wrapper (optional)
+   - For users who prefer `npm install -g bendjs`
+   - Then use `bend` command globally
+
+### Development (from this repo)
 
 ```bash
-# npx
-npx bendjs
+# Clone the repository
+git clone <repo-url>
+cd bend
 
-# or install globally
-npm i -g bendjs
-bend
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Test the CLI locally
+node packages/bend-core/dist/cli/index.js
 ```
 
----
+## 🎯 Tech Stack Options
 
-## CLI Prompts
+### Runtimes
+- **Node.js** (Auto-detected)
+- **Bun** (Auto-detected)
 
-- **Language** → JavaScript or TypeScript  
-- **Framework** → Express or Fastify  
-- **ORM** → Mongoose or Prisma  
-- **Project Name** → Used as your folder and package name  
-- **Package Manager** → npm / pnpm / yarn / bun (auto-detected with fallback)
+### Languages
+- **TypeScript** (Recommended)
+- **JavaScript**
 
-After setup, Bend installs dependencies and prepares your backend for development.
+### Frameworks
+- **Express** - Battle-tested, extensive ecosystem
+- **Fastify** - High performance, modern
 
----
+### Databases/ORMs
+- **MongoDB + Mongoose** - NoSQL with schema validation
+- **SQL + Prisma** - PostgreSQL, MySQL, SQLite support
 
-## Example Output
-
-If you choose **TypeScript + Express + Prisma**, Bend generates:
+## 📁 Generated Project Structure
 
 ```
-my-api/
-├─ package.json
-├─ tsconfig.json
-├─ prisma/
-│  └─ schema.prisma
-├─ src/
-│  ├─ server.ts
-│  ├─ routes/health.ts
-│  ├─ middlewares/error.ts
-│  └─ db/prisma.ts
-├─ .env.example
-└─ README.md
+my-backend/
+├── src/
+│   ├── config/
+│   │   ├── database.ts      # Database connection
+│   │   └── logger.ts        # Winston logger setup
+│   ├── controllers/         # Route controllers
+│   │   └── health.controller.ts
+│   ├── models/              # Database models
+│   │   └── User.model.ts
+│   ├── routes/              # Express/Fastify routes
+│   │   └── health.routes.ts
+│   ├── services/            # Business logic layer
+│   ├── middlewares/         # Custom middlewares
+│   ├── utils/               # Utility functions
+│   ├── app.ts               # App configuration
+│   └── server.ts            # Server entry point
+├── .env                     # Environment variables
+├── .gitignore
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-Then run:
+## 🛡️ Built-in Production Features
+
+### Security
+- ✅ Helmet - Security headers
+- ✅ CORS - Cross-origin resource sharing
+- ✅ HPP - HTTP parameter pollution prevention (Express)
+- ✅ Rate Limiting - DDoS protection
+
+### Logging
+- ✅ Winston - Structured logging
+- ✅ Daily log rotation
+- ✅ Separate error logs
+- ✅ Morgan - HTTP request logging
+
+### Error Handling
+- ✅ Async error handling
+- ✅ Centralized error middleware
+- ✅ Graceful shutdown
+- ✅ Unhandled rejection/exception handling
+
+### Performance
+- ✅ Compression - Response compression
+- ✅ Optimized configurations
+- ✅ Connection pooling (MongoDB)
+
+## 🔧 Development
+
+### Project Structure (Monorepo)
+
+```
+bend/
+├── packages/
+│   ├── create-bend/        # npm create initializer
+│   │   ├── bin/
+│   │   │   └── index.js    # Delegates to bend-core
+│   │   └── package.json
+│  │   ├── bend-cli/           # Tiny global CLI wrapper
+│   │   ├── bin/
+│   │   │   └── bend.js     # CLI entry point
+│   │   └── package.json
+│   └── bend-core/          # Core logic and templates
+│       ├── src/
+│       │   ├── cli/        # CLI implementation
+│       │   ├── scaffold/   # Template system
+│       │   │   ├── templates/  # Project templates
+│       │   │   ├── deps.ts     # Dependency resolver
+│       │   │   ├── normalize.ts
+│       │   │   ├── renderer.ts
+│       │   │   └── writer.ts
+│       │   ├── utils/      # Utilities (PM detection, etc.)
+│       │   └── types.ts
+│       └── package.json
+└── scripts/
+    └── compile-templates.mjs
+```
+
+### Available Scripts
 
 ```bash
+# Build all packages
+pnpm build
+
+# Build only core
+pnpm build:core
+
+# Test
+pnpm test
+
+# Lint
+pnpm lint
+```
+
+### Adding New Templates
+
+1. Create template directory: `packages/bend-core/src/scaffold/templates/stacks/{runtime}/{language}/{stack-name}/`
+2. Add template files with EJS syntax
+3. Update `deps.ts` for dependency resolution
+4. Rebuild: `pnpm build:core`
+
+## 📖 Usage Examples
+
+### Basic Setup
+
+```bash
+# Create a new project
+npm create bend my-api
+
+# Navigate to project
 cd my-api
+
+# Start development
 npm run dev
 ```
 
-Your backend starts with **nodemon** hot reloading.
+### Environment Variables
 
----
+```env
+# Database
+MONGODB_URI=mongodb://localhost:27017/my-api
+# or for Prisma
+DATABASE_URL=postgresql://user:pass@localhost:5432/mydb
 
-## Features
+# Server
+PORT=3000
+NODE_ENV=development
 
-- TypeScript & JavaScript support  
-- Express or Fastify frameworks  
-- Mongoose or Prisma ORM integration  
-- Automatic **nodemon** hot-reload setup  
-- **esbuild** bundling for fast builds  
-- Preconfigured scripts for dev, build & start  
-- Cross-platform (Windows, macOS, Linux) with smart PM detection + fallback
-
----
-
-## Project Scripts
-
-| Command                | Description                                   |
-|------------------------|-----------------------------------------------|
-| `npm run dev`          | Run the server with **nodemon** (live reload) |
-| `npm run build`        | Bundle using **esbuild**                      |
-| `npm start`            | Run the compiled app from `dist`              |
-| `npm run prisma:generate` | Generate Prisma client (if Prisma selected) |
-
----
-
-## Development (for contributors)
-
-```bash
-git clone https://github.com/bendhq/bend.git
-cd bend
-npm install
-npm run build
-npm link
-bend
+# Security
+JWT_SECRET=your-secret-key
+LOG_LEVEL=info
 ```
 
----
+## 🎯 Roadmap
 
-## Contributing
+- [x] CLI with interactive prompts
+- [x] Runtime detection (Node.js/Bun)
+- [x] Package manager detection  
+- [x] All 8 template combinations (TS/JS × Express/Fastify × Mongoose/Prisma)
+- [x] Bun runtime support
+- [x] NPM publishing structure
+- [ ] Testing setup (Jest/Vitest)
+- [ ] Docker support (optional)
+- [ ] Authentication templates
+- [ ] API documentation (Swagger/OpenAPI)
+- [ ] GraphQL support
 
-Contributions are welcome!  
-Improve templates, add stacks, or optimize the CLI.  
-Open an issue or PR on [GitHub](https://github.com/bendhq/bend).
+## 🤝 Contributing
 
----
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
+## 📄 License
 
-This project is licensed under the [MIT License](./LICENSE).  
-© 2025 [BendHQ](https://bendhq.org)
+MIT © Bend
 
----
+## 🙏 Acknowledgments
 
-## Links
-
-- **Bend Website:** https://bendhq.org 
-- **GitHub:** https://github.com/bendhq/bend  
-- **npm (main CLI):** https://www.npmjs.com/package/bendjs  
-- **npm (one-liner shim):** https://www.npmjs.com/package/create-bend  
-- **Issues:** https://github.com/bendhq/bend/issues
+- Inspired by [Vite](https://vitejs.dev/)
+- Built with [tsup](https://tsup.egoist.dev/)
+- CLI powered by [@clack/prompts](https://github.com/natemoo-re/clack)
