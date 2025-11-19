@@ -1,0 +1,39 @@
+{
+  "name": "create-bend",
+  "version": "1.0.0",
+  "description": "Create production-ready backend projects with Bend",
+  "type": "module",
+  "bin": {
+    "create-bend": "bin/index.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "keywords": [
+    "backend",
+    "scaffolder",
+    "generator",
+    "express",
+    "fastify",
+    "mongoose",
+    "prisma",
+    "typescript",
+    "nodejs",
+    "bun",
+    "create"
+  ],
+  "author": "Dhiraj",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bendhq/bend.git",
+    "directory": "packages/create-bend"
+  },
+  "homepage": "https://bendhq.org",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "peerDependencies": {
+    "bend-core": "^1.0.0"
+  }
+}

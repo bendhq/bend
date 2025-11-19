@@ -1,0 +1,191 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  test:
+    name: Test on Node ${{ matrix.node }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        node: [18.x, 20.x, 22.x]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build packages
+        run: pnpm build
+      
+      - name: Verify build artifacts
+        shell: bash
+        run: |
+          if [ ! -f "packages/bend-core/dist/cli/index.js" ]; then
+            echo "Error: bend-core CLI not built"
+            exit 1
+          fi
+          if [ ! -f "packages/bend-core/dist/index.js" ]; then
+            echo "Error: bend-core main entry not built"
+            exit 1
+          fi
+          echo "Build artifacts verified"
+      
+      - name: Verify templates exist
+        shell: bash
+        run: |
+          TEMPLATE_COUNT=$(find packages/bend-core/src/scaffold/templates/stacks -type d -name "*-*-*" | wc -l)
+          if [ "$TEMPLATE_COUNT" -ne 8 ]; then
+            echo "Error: Expected 8 templates, found $TEMPLATE_COUNT"
+            exit 1
+          fi
+          echo "All 8 templates verified"
+      
+      - name: Test template generation (TypeScript + Express + Mongoose)
+        run: |
+          node packages/bend-core/dist/cli/index.js test-ts-express-mongoose --runtime nodejs --language ts --framework express --orm mongoose --no-install
+        shell: bash
+      
+      - name: Verify generated project structure
+        shell: bash
+        run: |
+          if [ ! -f "test-ts-express-mongoose/package.json" ]; then
+            echo "Error: package.json not generated"
+            exit 1
+          fi
+          if [ ! -f "test-ts-express-mongoose/tsconfig.json" ]; then
+            echo "Error: tsconfig.json not generated"
+            exit 1
+          fi
+          if [ ! -f "test-ts-express-mongoose/src/server.ts" ]; then
+            echo "Error: server.ts not generated"
+            exit 1
+          fi
+          echo "Generated project structure verified"
+      
+      - name: Verify package.json has dependencies
+        shell: bash
+        run: |
+          DEPS=$(node -e "console.log(Object.keys(require('./test-ts-express-mongoose/package.json').dependencies).length)")
+          if [ "$DEPS" -lt 5 ]; then
+            echo "Error: Expected multiple dependencies, found $DEPS"
+            exit 1
+          fi
+          echo "Dependencies verified: $DEPS packages"
+      
+      - name: Test JavaScript template generation
+        run: |
+          node packages/bend-core/dist/cli/index.js test-js-fastify-prisma --runtime nodejs --language js --framework fastify --orm prisma --no-install
+        shell: bash
+      
+      - name: Verify JS project has type module
+        shell: bash
+        run: |
+          TYPE=$(node -e "console.log(require('./test-js-fastify-prisma/package.json').type || 'none')")
+          if [ "$TYPE" != "module" ]; then
+            echo "Error: JS project should have type: module"
+            exit 1
+          fi
+          echo "JS ESM configuration verified"
+      
+      - name: Cleanup test projects
+        if: always()
+        shell: bash
+        run: |
+          rm -rf test-*
+  
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run linter (if configured)
+        run: pnpm lint || echo "Linting not configured"
+        continue-on-error: true
+  
+  publish-check:
+    name: Check Publishing Readiness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build
+        run: pnpm build
+      
+      - name: Check package files
+        run: |
+          echo "Checking bend-core..."
+          cd packages/bend-core
+          npm pack --dry-run
+          
+          echo "Checking create-bend..."
+          cd ../create-bend
+          npm pack --dry-run
+          
+          echo "Checking bendjs..."
+          cd ../bend-cli
+          npm pack --dry-run
+          
+          echo "All packages ready for publishing!"

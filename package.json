@@ -1,69 +1,20 @@
 {
-  "name": "bendjs",
-  "version": "1.0.0",
-  "description": "Fast, modern backend bundler - build backend apps instantly with your favorite stack.",
-  "type": "module",
-  "bin": {
-    "bend": "bin/bend.js"
-  },
-  "files": [
-    "dist",
-    "bin",
-    "README.md",
-    "LICENSE",
-    "src/scaffold/templates"
-  ],
-  "scripts": {
-    "build": "tsup src/cli/index.ts --format esm --dts --out-dir dist",
-    "dev": "node --enable-source-maps dist/index.js",
-    "lint": "eslint . --ext .ts,.js"
-  },
+  "name": "bend-workspace",
+  "private": true,
+  "version": "0.0.0",
+  "author": "Dhiraj",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bendhq/bend.git"
-  },
-  "keywords": [
-    "backend",
-    "bundler",
-    "project-generator",
-    "typescript",
-    "javascript",
-    "express",
-    "fastify",
-    "mongoose",
-    "prisma",
-    "esbuild",
-    "nodemon",
-    "cli",
-    "nodejs",
-    "automation",
-    "developer-tools"
-  ],
-  "author": "Dhiraj",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bendhq/bend/issues"
+    "url": "https://github.com/bendhq/bend.git"
   },
   "homepage": "https://bendhq.org",
-  "engines": {
-    "node": "^20.19.0 || >=22.12.0"
-  },
-  "devDependencies": {
-    "@types/ejs": "3.1.5",
-    "@types/node": "^24.10.0",
-    "@typescript-eslint/eslint-plugin": "^8.46.3",
-    "@typescript-eslint/parser": "^8.46.3",
-    "eslint": "^9.39.1",
-    "eslint-config-prettier": "^10.1.8",
-    "tsup": "^8.5.0",
-    "typescript": "^5.9.3"
+  "scripts": {
+    "build": "pnpm --filter bend-core run build && pnpm --filter bendjs run build",
+    "build:core": "pnpm --filter bend-core run build",
+    "test": "pnpm -w run test",
+    "lint": "pnpm -w run lint"
   },
   "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "chokidar": "^4.0.3",
-    "commander": "^14.0.2",
-    "ejs": "^3.1.10",
-    "esbuild": "^0.25.12",
-    "picocolors": "^1.1.1"
+    "@types/ejs": "^3.1.5"
   }
 }
