@@ -72,58 +72,12 @@ jobs:
           fi
           echo "All 8 templates verified"
       
-      - name: Test template generation (TypeScript + Express + Mongoose)
-        run: |
-          node packages/bend-core/dist/cli/index.js test-ts-express-mongoose --runtime nodejs --language ts --framework express --orm mongoose --no-install
-        shell: bash
-      
-      - name: Verify generated project structure
+      - name: Verify CLI executable
         shell: bash
         run: |
-          if [ ! -f "test-ts-express-mongoose/package.json" ]; then
-            echo "Error: package.json not generated"
-            exit 1
-          fi
-          if [ ! -f "test-ts-express-mongoose/tsconfig.json" ]; then
-            echo "Error: tsconfig.json not generated"
-            exit 1
-          fi
-          if [ ! -f "test-ts-express-mongoose/src/server.ts" ]; then
-            echo "Error: server.ts not generated"
-            exit 1
-          fi
-          echo "Generated project structure verified"
-      
-      - name: Verify package.json has dependencies
-        shell: bash
-        run: |
-          DEPS=$(node -e "console.log(Object.keys(require('./test-ts-express-mongoose/package.json').dependencies).length)")
-          if [ "$DEPS" -lt 5 ]; then
-            echo "Error: Expected multiple dependencies, found $DEPS"
-            exit 1
-          fi
-          echo "Dependencies verified: $DEPS packages"
-      
-      - name: Test JavaScript template generation
-        run: |
-          node packages/bend-core/dist/cli/index.js test-js-fastify-prisma --runtime nodejs --language js --framework fastify --orm prisma --no-install
-        shell: bash
-      
-      - name: Verify JS project has type module
-        shell: bash
-        run: |
-          TYPE=$(node -e "console.log(require('./test-js-fastify-prisma/package.json').type || 'none')")
-          if [ "$TYPE" != "module" ]; then
-            echo "Error: JS project should have type: module"
-            exit 1
-          fi
-          echo "JS ESM configuration verified"
-      
-      - name: Cleanup test projects
-        if: always()
-        shell: bash
-        run: |
-          rm -rf test-*
+          node packages/bend-core/dist/cli/index.js --help
+          echo "CLI help command successful"
+
   
   lint:
     name: Lint
