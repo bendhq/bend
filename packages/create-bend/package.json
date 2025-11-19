@@ -32,8 +32,6 @@
   "homepage": "https://bendhq.org",
   "engines": {
     "node": ">=18.0.0"
-  },
-  "peerDependencies": {
-    "bend-core": "^1.0.0"
   }
+
 }
