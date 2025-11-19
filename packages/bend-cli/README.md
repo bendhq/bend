@@ -5,8 +5,10 @@
 # bendjs
 
 [![npm version](https://img.shields.io/npm/v/bendjs.svg)](https://www.npmjs.com/package/bendjs)
+[![CI](https://github.com/bendhq/bend/actions/workflows/ci.yml/badge.svg)](https://github.com/bendhq/bend/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-![Node.js Version](https://img.shields.io/badge/node-%5E20.19.0%20%7C%7C%20%3E%3D22.12.0-green)
+![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)
+![Bun Version](https://img.shields.io/badge/bun-%3E%3D1.0.0-orange)
 
 Global CLI wrapper for Bend - the production-ready backend scaffolder.
 
