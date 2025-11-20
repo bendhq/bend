@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "packages/bend-core/src/**/*.ts",
+    "packages/bend-cli/bin/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/templates/**"
+  ]
+}

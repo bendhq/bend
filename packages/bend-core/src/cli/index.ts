@@ -90,7 +90,7 @@ export async function main() {
       const runtime = options.runtime || ((process.versions as any).bun ? 'bun' : 'nodejs');
       const pm = options.pm || (await detectPackageManager());
 
-      let answers: Partial<CLIOptions> = {};
+      const answers: Partial<CLIOptions> = {};
       
       // If project name is not provided, ask for it in askQuestions (which we need to modify to accept initial values)
       // But askQuestions currently asks for everything.

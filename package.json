@@ -11,8 +11,18 @@
   "scripts": {
     "build": "pnpm --filter bend-core run build && pnpm --filter bendjs run build",
     "build:core": "pnpm --filter bend-core run build",
-    "test": "pnpm -w run test",
-    "lint": "pnpm -w run lint"
+    "test": "pnpm --filter bend-core run test",
+    "lint": "eslint \"packages/bend-core/src/**/*.ts\"",
+    "lint:fix": "eslint \"packages/bend-core/src/**/*.ts\" --fix",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\" \"!dist\" \"!node_modules\" \"!pnpm-lock.yaml\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,md}\" \"!dist\" \"!node_modules\" \"!pnpm-lock.yaml\""
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.0"
   },
   "dependencies": {
     "@types/ejs": "^3.1.5"
