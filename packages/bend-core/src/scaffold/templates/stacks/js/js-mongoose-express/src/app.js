@@ -1,17 +1,16 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
-import 'express-async-errors';
+import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import hpp from 'hpp';
-import logger from './config/logger';
+import logger from './config/logger.js';
 
 // Import routes
-import healthRoutes from './routes/health.routes';
+import healthRoutes from './routes/health.routes.js';
 
-const app= express();
+const app = express();
 
 // Security middlewares
 app.use(helmet());
@@ -31,7 +30,7 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// Body parser
+//Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -53,7 +52,7 @@ app.use('/api/health', healthRoutes);
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to  API',
+    message: 'Welcome to <%= projectName %> API',
     version: '1.0.0',
     status: 'running',
   });
