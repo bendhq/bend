@@ -78,7 +78,6 @@ export function resolveDeps(input: StackInput): StackDeps {
     deps.express = versions.express;
     deps.compression = versions.compression;
     deps.cors = versions.cors;
-    deps['express-async-errors'] = versions.express_async_errors;
     deps['express-rate-limit'] = versions.express_rate_limit;
     deps.helmet = versions.helmet;
     deps.hpp = versions.hpp;
@@ -112,8 +111,6 @@ export function resolveDeps(input: StackInput): StackDeps {
 
   if (input.orm === 'mongoose') {
     deps.mongoose = versions.mongoose;
-    if (input.language === 'ts')
-      dev['@types/mongoose'] = versions.types_mongoose;
   }
 
   if (input.orm === 'prisma') {
