@@ -1,69 +1,39 @@
 import fastify from 'fastify';
 import helmet from '@fastify/helmet';
+import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
 import compress from '@fastify/compress';
-import config from './config/index.js';
-import loggerPlugin from './plugins/logger.plugin.js';
-import requestIdPlugin from './plugins/requestId.plugin.js';
-import mongoosePlugin from './plugins/mongoose.plugin.js';
-import corsPlugin from './plugins/cors.plugin.js';
-import rateLimitPlugin from './plugins/rateLimit.plugin.js';
-import metricsPlugin from './plugins/metrics.plugin.js';
-import userRoutes from './routes/user.route.js';
+import logger from './config/logger.js';
+import healthRoutes from './routes/health.routes.js';
 
 const app = fastify({
-  logger: false,
-  trustProxy: config.trustProxy
+  logger: false
 });
 
-await app.register(loggerPlugin);
-await app.register(requestIdPlugin);
-await app.register(corsPlugin);
-await app.register(rateLimitPlugin);
-await app.register(metricsPlugin);
-await app.register(compress);
-await app.register(helmet);
-await app.register(mongoosePlugin);
+app.register(helmet);
+app.register(cors);
+app.register(compress);
+app.register(rateLimit, {
+  max: 100,
+  timeWindow: '1 minute'
+});
 
-// health
-app.get('/health', async (request, reply) => ({ status: 'ok', timestamp: Date.now() }));
+app.register(healthRoutes, { prefix: '/api/v1/health' });
 
-// root route
 app.get('/', async (request, reply) => {
   return {
-    name: config.appName,
+    message: 'Welcome to <%= projectName %> API',
     version: '1.0.0',
-    description: 'Bend-App API',
-    website: 'https://bendhq.org',
     status: 'running',
-    timestamp: Date.now()
   };
 });
 
-// register user routes under /api/v1/users
-await app.register(userRoutes, { prefix: '/api/v1/users' });
-
-// 404 handler is default; use setNotFoundHandler if you want custom
-app.setNotFoundHandler((request, reply) => {
-  reply.status(404).send({ status: 'fail', message: 'Not Found', requestId: request.id });
-});
-
-// error handler
 app.setErrorHandler((error, request, reply) => {
-  const status = error.statusCode || error.status || 500;
-  app.logger?.error?.(error);
-  // use winston instance if available
-  if (app.logger === false && app.decorate && app.hasDecorator('logger')) {
-    // nothing - logger available via plugin as fastify.logger is false
-  }
-  // send structured error
-  const payload = {
-    status: 'error',
-    statusCode: status,
-    message: error.message || 'Internal Server Error',
-    requestId: request.id
-  };
-  if (config.nodeEnv === 'development') payload.stack = error.stack;
-  reply.status(status).send(payload);
+  logger.error(error);
+  reply.status(error.statusCode || 500).send({
+    success: false,
+    message: error.message || 'Server Error'
+  });
 });
 
 export default app;

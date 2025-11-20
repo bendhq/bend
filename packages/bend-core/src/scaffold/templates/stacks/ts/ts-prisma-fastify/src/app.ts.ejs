@@ -3,8 +3,8 @@ import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import compress from '@fastify/compress';
-import logger from './config/logger.js';
-import healthRoutes from './routes/health.routes.js';
+import logger from './config/logger';
+import healthRoutes from './routes/health.routes';
 
 const app = fastify({
   logger: false
@@ -19,6 +19,14 @@ app.register(rateLimit, {
 });
 
 app.register(healthRoutes, { prefix: '/api/v1/health' });
+
+app.get('/', async (request, reply) => {
+  return {
+    message: 'Welcome to <%= projectName %> API',
+    version: '1.0.0',
+    status: 'running',
+  };
+});
 
 app.setErrorHandler((error, request, reply) => {
   logger.error(error);

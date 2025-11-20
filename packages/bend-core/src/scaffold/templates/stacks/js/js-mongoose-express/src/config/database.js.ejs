@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import logger from './logger';
+import logger from './logger.js';
 
-const connectDB = async ()=> {
+const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/';
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/<%= projectName %>';
     
     await mongoose.connect(mongoUri);
     

@@ -8,33 +8,41 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 
-// Connect to database
-connectDB();
+const start = async () => {
+  try {
+    // Connect to database
+    await connectDB();
+    
+    // Start server
+    const server = app.listen(PORT, () => {
+      logger.info(`Server is running on port ${PORT}`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    });
 
-// Start server
-const server = app.listen(PORT, () => {
-  logger.info(`Server is running on port ${PORT}`);
-  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+    // Graceful shutdown
+    const gracefulShutdown = (signal: string) => {
+      logger.info(`${signal} received. Shutting down gracefully...`);
+      
+      server.close(() => {
+        logger.info('HTTP server closed');
+        process.exit(0);
+      });
 
-// Graceful shutdown
-const gracefulShutdown = (signal: string) => {
-  logger.info(`${signal} received. Shutting down gracefully...`);
-  
-  server.close(() => {
-    logger.info('HTTP server closed');
-    process.exit(0);
-  });
+      // Force shutdown after 10 seconds
+      setTimeout(() => {
+        logger.error('Forcing shutdown after timeout');
+        process.exit(1);
+      }, 10000);
+    };
 
-  // Force shutdown after 10 seconds
-  setTimeout(() => {
-    logger.error('Forcing shutdown after timeout');
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+  } catch (error) {
+    logger.error('Failed to start server:', error);
     process.exit(1);
-  }, 10000);
+  }
 };
-
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // Handle unhandled rejections
 process.on('unhandledRejection', (reason: Error) => {
@@ -48,4 +56,4 @@ process.on('uncaughtException', (error: Error) => {
   process.exit(1);
 });
 
-export default server;
+start();
