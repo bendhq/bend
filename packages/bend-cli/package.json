@@ -26,7 +26,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "bend-core": "^1.0.3"
+    "bend-core": "workspace:^1.0.3"
   },
   "scripts": {
     "build": "echo skip"
