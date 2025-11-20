@@ -62,7 +62,11 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@24.10.1)
 
-  packages/create-bend: {}
+  packages/create-bend:
+    dependencies:
+      bend-core:
+        specifier: workspace:^
+        version: link:../bend-core
 
 packages:
 
