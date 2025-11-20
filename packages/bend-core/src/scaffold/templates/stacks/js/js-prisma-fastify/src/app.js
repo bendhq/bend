@@ -3,13 +3,12 @@ import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import compress from '@fastify/compress';
-import { logger } from './config/logger';
-import healthRoutes from './routes/health.routes';
+import logger from './config/logger.js';
+import healthRoutes from './routes/health.routes.js';
 
 const app = fastify({
-  logger: true
+  logger: false
 });
-
 
 app.register(helmet);
 app.register(cors);

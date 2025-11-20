@@ -53,7 +53,13 @@ const versions = {
   esbuild: '^0.25.12',
   pino: '^9.2.0',
   pino_pretty: '^10.3.0',
-  tsx: '^4.18.0',
+  tsx: '^4.19.0',
+  rimraf: '^6.0.1',
+  prettier: '^3.3.3',
+  eslint_config_prettier: '^9.1.0',
+  typescript_eslint: '^8.0.0',
+  globals: '^15.14.0',
+  eslint_js: '^9.0.0',
 };
 
 export function resolveDeps(input: StackInput): StackDeps {
@@ -118,31 +124,49 @@ export function resolveDeps(input: StackInput): StackDeps {
 
   if (input.language === 'ts') {
     dev.typescript = versions.typescript;
-    dev['ts-node'] = versions.ts_node;
+    dev.tsx = versions.tsx;
+    dev.rimraf = versions.rimraf;
+    dev.prettier = versions.prettier;
+    dev['eslint-config-prettier'] = versions.eslint_config_prettier;
+    dev['typescript-eslint'] = versions.typescript_eslint;
+    dev.globals = versions.globals;
+    dev['@eslint/js'] = versions.eslint_js;
     dev.tslib = versions.tslib;
     dev['@types/node'] = versions.types_node;
     dev.eslint = versions.eslint;
+    
     if (input.framework === 'express')
       dev['@types/express'] = versions.types_express;
-    scripts.build = 'tsc -b';
+      
+    scripts.build = 'rimraf dist && tsc';
+    scripts.format = 'prettier --write "src/**/*.ts"';
+    scripts.lint = 'eslint "src/**/*.ts" --fix';
+    
     if (input.runtime === 'bun') {
-      scripts.dev = 'bun run src/server.ts';
+      scripts.dev = 'bun run --watch src/server.ts';
       scripts.start = 'bun run src/server.ts';
     } else {
-      // Force overwrite for TS
-      scripts.dev = 'nodemon --watch src --exec "ts-node --esm src/server.ts"';
+      scripts.dev = 'tsx watch src/server.ts';
       scripts.start = 'node dist/server.js';
     }
   } else {
     dev.nodemon = versions.nodemon;
     dev.eslint = dev.eslint || versions.eslint;
+    dev.prettier = versions.prettier;
+    dev['eslint-config-prettier'] = versions.eslint_config_prettier;
+    dev.globals = versions.globals;
+    dev['@eslint/js'] = versions.eslint_js;
+    
+    scripts.format = 'prettier --write "src/**/*.js"';
+    scripts.lint = 'eslint "src/**/*.js" --fix';
+
     if (input.runtime === 'bun') {
-      scripts.dev = 'bun run src/server.js';
+      scripts.dev = 'bun run --watch src/server.js';
       scripts.start = 'bun run src/server.js';
     } else {
-      // Default JS scripts (already set in framework block, but ensuring consistency)
-      scripts.dev = scripts.dev || 'nodemon --watch src --exec "node src/server.js"';
-      scripts.start = scripts.start || 'node src/server.js';
+      // Default JS scripts
+      scripts.dev = 'nodemon src/server.js';
+      scripts.start = 'node src/server.js';
     }
   }
 
