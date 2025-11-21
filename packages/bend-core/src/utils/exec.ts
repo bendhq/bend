@@ -1,7 +1,7 @@
 import {
   spawn as _spawn,
   spawnSync as _spawnSync,
-  SpawnOptions,
+  type SpawnOptions,
 } from 'child_process';
 import path from 'path';
 
