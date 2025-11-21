@@ -1,41 +1,51 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import app from './app.js';
+import logger from './plugins/logger.plugin.js';
 import config from './config/index.js';
-import { disconnectDB } from './config/db.js';
+import { connectDB, disconnectDB } from './config/db.js';
 
 const PORT = config.port;
 
 async function start() {
   try {
+    await connectDB();
     await app.listen({ port: PORT, host: '0.0.0.0' });
-    console.log(`Server listening on port ${PORT}`);
+    logger.info(`Server listening on port ${PORT}`);
+    logger.info(`Environment: ${config.nodeEnv}`);
   } catch (err) {
-    console.error('Failed to start', err);
+    logger.error('Failed to start server', err);
     process.exit(1);
   }
 
   const graceful = async (signal) => {
     try {
-      console.warn(`Received ${signal} — closing server`);
+      logger.warn(`Received ${signal} — closing server`);
       await app.close();
+      logger.info('Fastify server closed');
       await disconnectDB();
-      console.log('Shutdown complete');
+      logger.info('Shutdown complete');
       process.exit(0);
     } catch (err) {
-      console.error('Graceful shutdown failed', err);
+      logger.error('Graceful shutdown failed', err);
       process.exit(1);
     }
   };
 
   process.on('SIGINT', () => graceful('SIGINT'));
   process.on('SIGTERM', () => graceful('SIGTERM'));
+  
   process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception', err);
+    logger.error('Uncaught Exception', { message: err.message, stack: err.stack });
     process.exit(1);
   });
+  
   process.on('unhandledRejection', (reason) => {
-    console.error('Unhandled Rejection', reason);
+    logger.error('Unhandled Rejection', { reason });
     process.exit(1);
   });
 }
 
 start();
+

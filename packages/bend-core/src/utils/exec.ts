@@ -148,8 +148,11 @@ export function execSync(
   };
 }
 
+import { createRequire } from 'module';
+
 export function resolveBin(name: string, cwd = process.cwd()): string | null {
   try {
+    const require = createRequire(import.meta.url);
     const p = require.resolve(path.join(name, 'package.json'), {
       paths: [cwd],
     });
