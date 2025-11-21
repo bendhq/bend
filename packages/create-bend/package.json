@@ -1,6 +1,6 @@
 {
   "name": "create-bend",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Create production-ready backend projects with Bend",
   "type": "module",
   "bin": {
@@ -34,7 +34,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "bend-core": "workspace:^1.0.3"
+    "bend-core": "workspace:^1.0.4"
   }
 
 }
