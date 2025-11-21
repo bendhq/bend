@@ -1,6 +1,6 @@
 {
   "name": "bendjs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Bend CLI - Production-ready backend scaffolder (Global CLI wrapper)",
   "bin": {
     "bend": "bin/bend.js"
@@ -26,7 +26,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "bend-core": "workspace:^1.0.4"
+    "bend-core": "workspace:^1.0.5"
   },
   "scripts": {
     "build": "echo skip"
