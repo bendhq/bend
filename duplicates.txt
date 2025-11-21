@@ -1,0 +1,6 @@
+stacks\js\js-mongoose-express\.prettierrc
+stacks\js\js-mongoose-express\src\models\user.model.js
+stacks\js\js-mongoose-express\_gitignore
+stacks\js\js-mongoose-fastify\src\models\user.model.js
+stacks\js\js-mongoose-fastify\src\utils\helpers.js
+stacks\js\js-mongoose-fastify\_gitignore
