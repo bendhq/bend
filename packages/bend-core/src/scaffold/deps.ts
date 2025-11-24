@@ -35,7 +35,7 @@ const versions = {
   mongoose: '^8.19.4',
   prisma_cli: '^6.19.0',
   prisma_client: '^6.19.0',
-  dotenv: '^17.2.3',
+  dotenv: '^16.4.5',
   prom_client: '^15.1.3',
   uuid: '^13.0.0',
   winston: '^3.18.3',
@@ -76,7 +76,6 @@ export function resolveDeps(input: StackInput): StackDeps {
 
   if (input.framework === 'express') {
     deps.express = versions.express;
-    deps['express-async-errors'] = versions.express_async_errors;
     deps.compression = versions.compression;
     deps.cors = versions.cors;
     deps['express-rate-limit'] = versions.express_rate_limit;

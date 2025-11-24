@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+// import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
 export const getHealthStatus = async (req, res)=> {

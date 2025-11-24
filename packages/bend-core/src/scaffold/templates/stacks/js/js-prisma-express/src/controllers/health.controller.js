@@ -1,20 +1,27 @@
-import { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import { prisma } from '../config/prisma.js';
+import os from 'os';
 
-export const getHealthStatus = async (req, res)=> {
+export const getHealthStatus = async (req, res) => {
+  let dbStatus = false;
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    dbStatus = true;
+  } catch (e) {
+    dbStatus = false;
+  }
+
   const healthCheck = {
     status: 'OK',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     database: {
-      connected: mongoose.connection.readyState === 1,
-      state: mongoose.connection.readyState,
+      connected: dbStatus,
     },
     memory: {
       usage: process.memoryUsage(),
-      free: require('os').freemem(),
-      total: require('os').totalmem(),
+      free: os.freemem(),
+      total: os.totalmem(),
     },
   };
 
