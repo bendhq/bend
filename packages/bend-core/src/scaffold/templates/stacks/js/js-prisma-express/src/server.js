@@ -1,10 +1,10 @@
+import 'express-async-errors';
 import dotenv from 'dotenv';
+dotenv.config();
+
 import app from './app.js';
 import { prisma } from './config/prisma.js';
 import logger from './config/logger.js';
-
-// Load environment variables
-dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 

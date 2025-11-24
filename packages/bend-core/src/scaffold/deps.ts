@@ -76,6 +76,7 @@ export function resolveDeps(input: StackInput): StackDeps {
 
   if (input.framework === 'express') {
     deps.express = versions.express;
+    deps['express-async-errors'] = versions.express_async_errors;
     deps.compression = versions.compression;
     deps.cors = versions.cors;
     deps['express-rate-limit'] = versions.express_rate_limit;
