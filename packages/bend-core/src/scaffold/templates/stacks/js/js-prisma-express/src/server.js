@@ -4,8 +4,9 @@ dotenv.config();
 import app from './app.js';
 import { prisma } from './config/prisma.js';
 import logger from './config/logger.js';
+import config from './config/index.js';
 
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 
 const start = async () => {
   try {

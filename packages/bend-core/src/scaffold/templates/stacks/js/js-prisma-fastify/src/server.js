@@ -4,8 +4,9 @@ dotenv.config();
 import app from './app.js';
 import logger from './config/logger.js';
 import { prisma } from './config/prisma.js';
+import config from './config/index.js';
 
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 
 async function start() {
   try {
@@ -14,7 +15,7 @@ async function start() {
     
     await app.listen({ port: Number(PORT), host: '0.0.0.0' });
     logger.info(`Server running on port ${PORT}`);
-    logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    logger.info(`Environment: ${config.nodeEnv}`);
   } catch (err) {
     logger.error('Failed to start server', err);
     await prisma.$disconnect();
