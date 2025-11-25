@@ -1,6 +1,6 @@
 {
   "name": "create-bend",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Create production-ready backend projects with Bend",
   "type": "module",
   "bin": {
