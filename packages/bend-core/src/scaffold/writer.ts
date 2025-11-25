@@ -12,7 +12,7 @@ import type {
   Context,
 } from '../types';
 
-const TMP = '.tmp';
+const TMP = '.bend_tmp';
 const CONCURRENCY = Math.max(2, (os.cpus().length || 2) * 2);
 const CACHE = path.join(os.homedir(), '.bend_core_cache');
 
@@ -65,10 +65,26 @@ async function atomicWrite(dest: string, src: Buffer | string, mode?: number) {
   const dir = path.dirname(dest);
   await mkdir(dir);
   const tmp = dest + '.' + process.pid + TMP;
-  if (typeof src === 'string') await fs.copyFile(src, tmp);
-  else await fs.writeFile(tmp, src);
-  if (mode !== undefined) await fs.chmod(tmp, mode & 0o777);
-  await fs.rename(tmp, dest);
+  
+  try {
+    if (typeof src === 'string') await fs.copyFile(src, tmp);
+    else await fs.writeFile(tmp, src);
+    
+    if (mode !== undefined) await fs.chmod(tmp, mode & 0o777);
+    
+    await fs.rename(tmp, dest);
+  } catch (err: any) {
+    // If anything failed (write, chmod, rename), try to clean up temp file
+    try { await fs.unlink(tmp); } catch {}
+    
+    // Fall back to direct write
+    if (typeof src === 'string') {
+      await fs.copyFile(src, dest);
+    } else {
+      await fs.writeFile(dest, src);
+    }
+    if (mode !== undefined) await fs.chmod(dest, mode & 0o777);
+  }
 }
 
 function limitPool(n: number) {

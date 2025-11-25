@@ -35,7 +35,7 @@ const versions = {
   mongoose: '^8.19.4',
   prisma_cli: '^6.19.0',
   prisma_client: '^6.19.0',
-  dotenv: '^17.2.3',
+  dotenv: '^16.4.5',
   prom_client: '^15.1.3',
   uuid: '^13.0.0',
   winston: '^3.18.3',
@@ -132,8 +132,13 @@ export function resolveDeps(input: StackInput): StackDeps {
     dev['@types/node'] = versions.types_node;
     dev.eslint = versions.eslint;
     
-    if (input.framework === 'express')
+    if (input.framework === 'express') {
       dev['@types/express'] = versions.types_express;
+      dev['@types/cors'] = '^2.8.17';
+      dev['@types/hpp'] = '^0.2.5';
+      dev['@types/compression'] = '^1.7.5';
+      dev['@types/morgan'] = '^1.9.9';
+    }
       
     scripts.build = 'rimraf dist && tsc';
     scripts.format = 'prettier --write "src/**/*.ts"';

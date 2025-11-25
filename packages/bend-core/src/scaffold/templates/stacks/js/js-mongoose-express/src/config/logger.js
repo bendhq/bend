@@ -63,6 +63,7 @@ const logger = winston.createLogger({
       maxFiles: '30d',
     }),
   ],
+  exitOnError: false,
 });
 
 export default logger;

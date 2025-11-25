@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 
-export const checkHealth = async (req: FastifyRequest, reply: FastifyReply) => {
+export const checkHealth = async (_req: FastifyRequest, reply: FastifyReply) => {
   reply.send({
     success: true,
     message: 'Server is healthy',
