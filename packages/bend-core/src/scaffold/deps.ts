@@ -132,8 +132,13 @@ export function resolveDeps(input: StackInput): StackDeps {
     dev['@types/node'] = versions.types_node;
     dev.eslint = versions.eslint;
     
-    if (input.framework === 'express')
+    if (input.framework === 'express') {
       dev['@types/express'] = versions.types_express;
+      dev['@types/cors'] = '^2.8.17';
+      dev['@types/hpp'] = '^0.2.5';
+      dev['@types/compression'] = '^1.7.5';
+      dev['@types/morgan'] = '^1.9.9';
+    }
       
     scripts.build = 'rimraf dist && tsc';
     scripts.format = 'prettier --write "src/**/*.ts"';

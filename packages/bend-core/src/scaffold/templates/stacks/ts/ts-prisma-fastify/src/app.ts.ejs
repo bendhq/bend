@@ -20,7 +20,7 @@ app.register(rateLimit, {
 
 app.register(healthRoutes, { prefix: '/api/v1/health' });
 
-app.get('/', async (request, reply) => {
+app.get('/', async () => {
   return {
     message: 'Welcome to <%= projectName %> API',
     version: '1.0.0',
@@ -28,7 +28,7 @@ app.get('/', async (request, reply) => {
   };
 });
 
-app.setErrorHandler((error, request, reply) => {
+app.setErrorHandler((error: any, _request, reply) => {
   logger.error(error);
   reply.status(error.statusCode || 500).send({
     success: false,

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
-export const getHealthStatus = async (req: Request, res: Response): Promise<void> => {
+export const getHealthStatus = async (_req: Request, res: Response): Promise<void> => {
   const healthCheck = {
     status: 'OK',
     timestamp: new Date().toISOString(),

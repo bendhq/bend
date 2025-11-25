@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/health', healthRoutes);
 
 // Root endpoint
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.json({
     message: 'Welcome to <%= projectName %> API',
     version: '1.0.0',
@@ -68,7 +68,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // Error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   logger.error('Error:', {
     message: err.message,
     stack: err.stack,
