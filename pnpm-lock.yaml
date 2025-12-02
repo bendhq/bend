@@ -65,7 +65,7 @@ importers:
   packages/create-bend:
     dependencies:
       bend-core:
-        specifier: workspace:^1.0.9
+        specifier: workspace:^1.0.10
         version: link:../bend-core
 
 packages:
