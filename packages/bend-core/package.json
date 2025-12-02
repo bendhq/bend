@@ -1,6 +1,6 @@
 {
   "name": "bend-core",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Production-ready backend scaffolder for Node.js and Bun - Core library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
