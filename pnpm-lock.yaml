@@ -65,8 +65,8 @@ importers:
   packages/create-bend:
     dependencies:
       bend-core:
-        specifier: ^1.0.10
-        version: 1.0.10
+        specifier: workspace:^1.0.11
+        version: link:../bend-core
 
 packages:
 
@@ -697,11 +697,6 @@ packages:
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
-
-  bend-core@1.0.10:
-    resolution: {integrity: sha512-KN6zDrtZ8GJBCwKZBMzU42WuuLL1pFK9s87sPbCt/gJFJ6rK/oBAtKHVJ9vPLzBJfcqzKCryBkhkX9sc31t77g==}
-    engines: {node: '>=18.0.0'}
-    hasBin: true
 
   brace-expansion@1.1.12:
     resolution: {integrity: sha512-9T9UjW3r0UW5c1Q7GTwllptXwhvYmEzFhzMfZ9H7FQWt+uZePjZPjBP/W1ZEyZ1twGWom5/56TF4lPcqjnDHcg==}
@@ -2039,13 +2034,6 @@ snapshots:
   async@3.2.6: {}
 
   balanced-match@1.0.2: {}
-
-  bend-core@1.0.10:
-    dependencies:
-      '@clack/prompts': 0.11.0
-      commander: 14.0.2
-      ejs: 3.1.10
-      picocolors: 1.1.1
 
   brace-expansion@1.1.12:
     dependencies:
