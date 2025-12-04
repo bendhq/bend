@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
+import os from 'os';
 
 export const getHealthStatus = async (_req: Request, res: Response): Promise<void> => {
   const healthCheck = {
@@ -13,8 +14,8 @@ export const getHealthStatus = async (_req: Request, res: Response): Promise<voi
     },
     memory: {
       usage: process.memoryUsage(),
-      free: require('os').freemem(),
-      total: require('os').totalmem(),
+      free: os.freemem(),
+      total: os.totalmem(),
     },
   };
 

@@ -1,0 +1,26 @@
+import { FastifyRequest, FastifyReply } from 'fastify';
+import createError from 'http-errors';
+import * as userService from '../services/user.service';
+
+export async function create(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+  try {
+    const created = await userService.createUser(request.body as any);
+    reply.code(201).send(created);
+  } catch (err: any) {
+    if (err.code === 11000) {
+      throw createError(409, 'Email already exists');
+    }
+    throw err;
+  }
+}
+
+export async function list(_request: FastifyRequest, reply: FastifyReply): Promise<void> {
+  const users = await userService.listUsers();
+  reply.send(users);
+}
+
+export async function getById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply): Promise<void> {
+  const user = await userService.getUserById(request.params.id);
+  if (!user) throw createError(404, 'User not found');
+  reply.send(user);
+}

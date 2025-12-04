@@ -1,0 +1,21 @@
+import fp from 'fastify-plugin';
+import { FastifyInstance } from 'fastify';
+import { create, list, getById } from '../controllers/user.controller';
+import { createUserSchema } from '../schemas/user.schema';
+import { validateWithJoi } from '../utils/helpers';
+
+async function userRoutes(fastify: FastifyInstance): Promise<void> {
+  fastify.get('/', { schema: { response: { 200: { type: 'array' } } } }, list);
+
+  fastify.post(
+    '/',
+    {
+      preHandler: validateWithJoi(createUserSchema, 'body')
+    },
+    create
+  );
+
+  fastify.get('/:id', getById);
+}
+
+export default fp(userRoutes, { name: 'user-routes' });

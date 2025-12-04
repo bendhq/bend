@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import os from 'os';
 
 export const getHealthStatus = async (req, res)=> {
   const healthCheck = {
@@ -12,8 +13,8 @@ export const getHealthStatus = async (req, res)=> {
     },
     memory: {
       usage: process.memoryUsage(),
-      free: require('os').freemem(),
-      total: require('os').totalmem(),
+      free: os.freemem(),
+      total: os.totalmem(),
     },
   };
 

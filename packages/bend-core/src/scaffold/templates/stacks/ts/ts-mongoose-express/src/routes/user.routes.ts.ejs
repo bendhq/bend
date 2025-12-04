@@ -1,0 +1,19 @@
+import { Router } from 'express';
+import { create, list, getById } from '../controllers/user.controller';
+import Joi from 'joi';
+import { validateBody } from '../middlewares/validateBody';
+
+const router: Router = Router();
+
+const createSchema = Joi.object({
+  name: Joi.string().min(2).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  role: Joi.string().valid('user', 'admin').optional()
+});
+
+router.get('/', list);
+router.post('/', validateBody(createSchema), create);
+router.get('/:id', getById);
+
+export default router;
